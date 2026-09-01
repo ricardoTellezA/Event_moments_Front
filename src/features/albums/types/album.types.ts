@@ -43,6 +43,7 @@ export type EventAlbum = {
   bestOfOn: boolean;
   votes: Record<string, Record<string, number>>;
   photos: AlbumMemory[];
+  photosCount: number;
   contributors: number;
   views: number;
   closedManually?: boolean;

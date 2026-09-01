@@ -117,6 +117,7 @@ export function createAlbum(input: {
     bestOfOn: input.bestOfOn,
     votes: {},
     photos: [],
+    photosCount: 0,
     contributors: 0,
     views: 0,
   };

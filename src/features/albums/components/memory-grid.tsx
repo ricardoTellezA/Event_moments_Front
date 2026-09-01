@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { CheckIcon, XIcon } from "lucide-react";
+import { CheckIcon, Trash2Icon, XIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 export function MemoryGrid({
   photos,
   moderation = false,
+  showStatus = false,
   onApprove,
   onReject,
   onRemove,
@@ -18,6 +19,7 @@ export function MemoryGrid({
 }: {
   photos: AlbumMemory[];
   moderation?: boolean;
+  showStatus?: boolean;
   onApprove?: (id: string) => void;
   onReject?: (id: string) => void;
   onRemove?: (id: string) => void;
@@ -28,6 +30,84 @@ export function MemoryGrid({
       <p className="rounded-3xl border border-dashed border-border p-10 text-center text-muted-foreground">
         Todavia no hay recuerdos aqui. Se el primero en subir.
       </p>
+    );
+  }
+
+  if (moderation) {
+    return (
+      <div className={cn("space-y-3", className)}>
+        {photos.map((photo, index) => (
+          <figure
+            key={photo.id}
+            className="flex gap-3 rounded-2xl border border-border bg-card p-2 shadow-soft"
+          >
+            <div className="relative size-24 shrink-0 overflow-hidden rounded-xl bg-muted sm:size-28">
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                width={240}
+                height={240}
+                unoptimized
+                loading="lazy"
+                className="size-full object-cover"
+              />
+            </div>
+            <div className="min-w-0 flex-1 py-1 pr-1">
+              <figcaption>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {photo.guest}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Recuerdo {index + 1}</p>
+                  </div>
+                  <Badge
+                    variant={photo.status === "rejected" ? "destructive" : "secondary"}
+                    className="h-6 shrink-0 rounded-full px-2 text-[0.68rem]"
+                  >
+                    {photo.status === "pending"
+                      ? "Pendiente"
+                      : photo.status === "rejected"
+                        ? "Rechazada"
+                        : "Aprobada"}
+                  </Badge>
+                </div>
+              </figcaption>
+              <div className="mt-4 flex items-center gap-2">
+                <Button
+                  size="icon-sm"
+                  variant={photo.status === "approved" ? "secondary" : "soft"}
+                  disabled={photo.status === "approved"}
+                  onClick={() => onApprove?.(photo.id)}
+                  aria-label="Aprobar recuerdo"
+                  className="size-9 rounded-full"
+                >
+                  <CheckIcon />
+                </Button>
+                <Button
+                  size="icon-sm"
+                  variant="outline"
+                  disabled={photo.status === "rejected"}
+                  onClick={() => onReject?.(photo.id)}
+                  aria-label="Rechazar recuerdo"
+                  className="size-9 rounded-full"
+                >
+                  <XIcon />
+                </Button>
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  onClick={() => onRemove?.(photo.id)}
+                  aria-label="Eliminar recuerdo"
+                  className="ml-auto size-9 rounded-full text-destructive hover:text-destructive"
+                >
+                  <Trash2Icon />
+                </Button>
+              </div>
+            </div>
+          </figure>
+        ))}
+      </div>
     );
   }
 
@@ -50,10 +130,10 @@ export function MemoryGrid({
           <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent p-3 text-xs font-semibold text-background opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             {photo.guest} · recuerdo {index + 1}
           </figcaption>
-          {moderation ? (
+          {moderation || showStatus ? (
             <Badge
               variant={photo.status === "rejected" ? "destructive" : "secondary"}
-              className="absolute left-2 top-2 bg-card/90"
+              className="absolute left-2 top-2 h-7 rounded-full bg-card/90 px-2.5 text-xs shadow-soft backdrop-blur"
             >
               {photo.status === "pending"
                 ? "Pendiente"
@@ -63,11 +143,11 @@ export function MemoryGrid({
             </Badge>
           ) : null}
           {moderation ? (
-            <div className="absolute inset-x-2 bottom-2 flex gap-2 opacity-100 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100">
+            <div className="absolute inset-x-2 bottom-2 flex justify-end gap-2 opacity-100 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100">
               {photo.status !== "approved" ? (
                 <Button
                   size="icon-sm"
-                  className="bg-card/95 text-foreground shadow-soft hover:bg-card"
+                  className="size-8 bg-card/95 text-foreground shadow-soft hover:bg-card"
                   onClick={() => onApprove?.(photo.id)}
                   aria-label="Aprobar recuerdo"
                 >
@@ -78,7 +158,7 @@ export function MemoryGrid({
                 <Button
                   size="icon-sm"
                   variant="outline"
-                  className="bg-card/95 shadow-soft"
+                  className="size-8 bg-card/95 shadow-soft"
                   onClick={() => onReject?.(photo.id)}
                   aria-label="Rechazar recuerdo"
                 >
@@ -92,7 +172,7 @@ export function MemoryGrid({
               type="button"
               aria-label="Eliminar recuerdo"
               onClick={() => onRemove(photo.id)}
-              className="absolute right-2 top-2 grid size-8 place-items-center rounded-full bg-card/90 text-foreground opacity-0 shadow-soft transition-all duration-300 hover:bg-card group-hover:opacity-100"
+              className="absolute right-2 top-2 grid size-8 place-items-center rounded-full bg-card/90 text-foreground shadow-soft transition-all duration-300 hover:bg-card sm:opacity-0 sm:group-hover:opacity-100"
             >
               <XIcon className="size-4" />
             </button>

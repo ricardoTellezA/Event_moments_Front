@@ -16,6 +16,12 @@ export type ApiEvent = {
   status: "draft" | "active" | "closed" | "frozen";
   privacy: "public" | "pin";
   allowDownloads: boolean;
+  allowVideos: boolean;
+  allowVoice: boolean;
+  challengesOn: boolean;
+  bestOfOn: boolean;
+  disposableOn: boolean;
+  photosPerGuest: number;
   maxPhotos: number | null;
   views: number;
   contributors: number;
@@ -42,6 +48,12 @@ export type CreateEventInput = {
   revealMode: boolean;
   revealAt?: string;
   allowDownloads: boolean;
+  allowVideos?: boolean;
+  allowVoice?: boolean;
+  challengesOn?: boolean;
+  bestOfOn?: boolean;
+  disposableOn?: boolean;
+  photosPerGuest?: number;
   maxPhotos?: number;
 };
 
@@ -56,6 +68,12 @@ export type UpdateEventInput = Partial<{
   revealMode: boolean;
   revealAt: string | null;
   allowDownloads: boolean;
+  allowVideos: boolean;
+  allowVoice: boolean;
+  challengesOn: boolean;
+  bestOfOn: boolean;
+  disposableOn: boolean;
+  photosPerGuest: number;
   maxPhotos: number | null;
 }>;
 
@@ -83,16 +101,17 @@ export function mapApiEventToAlbum(event: ApiEvent): EventAlbum {
     createdAt: event.createdAt,
     revealMode: event.revealMode,
     revealAt: event.revealAt ?? undefined,
-    challengesOn: false,
+    challengesOn: event.challengesOn,
     challenges: defaultChallenges,
-    disposableOn: false,
-    photosPerGuest: event.maxPhotos ?? 12,
-    allowVideos: true,
-    allowVoice: false,
+    disposableOn: event.disposableOn,
+    photosPerGuest: event.photosPerGuest,
+    allowVideos: event.allowVideos,
+    allowVoice: event.allowVoice,
     allowDownload: event.allowDownloads,
-    bestOfOn: false,
+    bestOfOn: event.bestOfOn,
     votes: {},
     photos,
+    photosCount: event.photosCount,
     contributors: event.contributors,
     views: event.views,
     closedManually: event.status === "closed",

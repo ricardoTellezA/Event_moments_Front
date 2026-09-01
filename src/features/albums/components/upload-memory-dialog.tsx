@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ImagePlusIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ImagePlusIcon, Loader2Icon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -15,19 +15,52 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Progress, ProgressLabel } from "@/components/ui/progress";
+import { ApiError } from "@/lib/api/client";
+
+const maxFileSize = 1024 * 1024;
+
+type SelectedMemory = {
+  id: string;
+  file: File;
+  previewUrl: string;
+};
+
+type UploadPhase = "idle" | "compressing" | "uploading";
 
 export function UploadMemoryDialog({
   disabled,
+  maxFiles = 12,
   onUpload,
 }: {
   disabled?: boolean;
+  maxFiles?: number;
   onUpload: (guest: string, files: File[]) => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
   const [guest, setGuest] = useState("");
-  const [files, setFiles] = useState<File[]>([]);
+  const [selectedMemories, setSelectedMemories] = useState<SelectedMemory[]>([]);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadPhase, setUploadPhase] = useState<UploadPhase>("idle");
+  const [progress, setProgress] = useState(0);
+
+  const files = useMemo(
+    () => selectedMemories.map((memory) => memory.file),
+    [selectedMemories],
+  );
+
+  useEffect(() => {
+    return () => {
+      selectedMemories.forEach((memory) => URL.revokeObjectURL(memory.previewUrl));
+    };
+  }, [selectedMemories]);
+
+  const resetSelection = () => {
+    selectedMemories.forEach((memory) => URL.revokeObjectURL(memory.previewUrl));
+    setSelectedMemories([]);
+    setFileInputKey((key) => key + 1);
+  };
 
   const handleUpload = async () => {
     if (!files.length) {
@@ -37,16 +70,34 @@ export function UploadMemoryDialog({
 
     try {
       setIsUploading(true);
-      const compressedFiles = await Promise.all(files.map(compressImage));
+      setUploadPhase("compressing");
+      setProgress(8);
+
+      const compressedFiles: File[] = [];
+
+      for (const [index, file] of files.entries()) {
+        compressedFiles.push(await compressImage(file));
+        setProgress(Math.round(((index + 1) / files.length) * 70));
+      }
+
+      setUploadPhase("uploading");
+      setProgress(82);
       await onUpload(guest, compressedFiles);
+      setProgress(100);
       setGuest("");
-      setFiles([]);
-      setFileInputKey((key) => key + 1);
+      resetSelection();
       setOpen(false);
-    } catch {
-      toast.error("No pudimos subir las fotos");
+      toast.success(
+        compressedFiles.length === 1
+          ? "1 recuerdo enviado a revision"
+          : `${compressedFiles.length} recuerdos enviados a revision`,
+      );
+    } catch (error) {
+      toast.error(getUploadErrorMessage(error));
     } finally {
       setIsUploading(false);
+      setUploadPhase("idle");
+      setProgress(0);
     }
   };
 
@@ -64,7 +115,7 @@ export function UploadMemoryDialog({
         <ImagePlusIcon />
         Subir fotos
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Subir recuerdos</DialogTitle>
           <DialogDescription>
@@ -87,17 +138,92 @@ export function UploadMemoryDialog({
             accept="image/*"
             multiple
             onChange={(event) => {
-              setFiles(Array.from(event.target.files ?? []).slice(0, 12));
+              const selectedFiles = Array.from(event.target.files ?? []);
+
+              if (selectedFiles.length > maxFiles) {
+                toast.error(`Solo puedes subir ${maxFiles} fotos mas`);
+              }
+
+              const nextMemories = selectedFiles.slice(0, maxFiles).map((file) => ({
+                id: `${file.name}-${file.lastModified}-${crypto.randomUUID()}`,
+                file,
+                previewUrl: URL.createObjectURL(file),
+              }));
+
+              resetSelection();
+              setSelectedMemories(nextMemories);
             }}
           />
           <span className="block text-xs text-muted-foreground">
-            Maximo 12 fotos por subida. Limite final: 150 fotos por album.
+            Maximo {maxFiles} fotos en esta subida. Limite final: 150 fotos por
+            album.
           </span>
         </label>
+
+        {selectedMemories.length > 0 ? (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm font-semibold">
+                {selectedMemories.length} seleccionadas
+              </p>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                disabled={isUploading}
+                onClick={resetSelection}
+              >
+                Limpiar
+              </Button>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {selectedMemories.map((memory) => (
+                <div
+                  key={memory.id}
+                  className="group relative overflow-hidden rounded-2xl bg-muted shadow-soft"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={memory.previewUrl}
+                    alt={memory.file.name}
+                    className="aspect-square w-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    disabled={isUploading}
+                    onClick={() => {
+                      URL.revokeObjectURL(memory.previewUrl);
+                      setSelectedMemories((current) =>
+                        current.filter((item) => item.id !== memory.id),
+                      );
+                    }}
+                    className="absolute right-1.5 top-1.5 grid size-8 place-items-center rounded-full bg-card/95 text-foreground shadow-soft transition-transform active:scale-95 disabled:pointer-events-none disabled:opacity-50"
+                    aria-label="Quitar foto"
+                  >
+                    <Trash2Icon className="size-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {isUploading ? (
+          <Progress value={progress} className="rounded-2xl bg-muted/50 p-4">
+            <ProgressLabel className="inline-flex items-center gap-2">
+              <Loader2Icon className="size-4 animate-spin text-primary" />
+              {uploadPhase === "compressing" ? "Optimizando fotos" : "Subiendo fotos"}
+            </ProgressLabel>
+            <span className="ml-auto text-sm text-muted-foreground tabular-nums">
+              {progress}%
+            </span>
+          </Progress>
+        ) : null}
+
         <DialogFooter>
           <Button
             className="bg-afterglow"
-            disabled={isUploading}
+            disabled={isUploading || !selectedMemories.length}
             onClick={() => void handleUpload()}
           >
             {isUploading ? "Subiendo..." : "Agregar recuerdos"}
@@ -106,6 +232,28 @@ export function UploadMemoryDialog({
       </DialogContent>
     </Dialog>
   );
+}
+
+function getUploadErrorMessage(error: unknown) {
+  if (error instanceof Error && error.message === "IMAGE_TOO_LARGE") {
+    return "Una foto sigue pesando mas de 1 MB despues de optimizarla";
+  }
+
+  if (error instanceof ApiError) {
+    const messages: Record<string, string> = {
+      EVENT_PHOTO_LIMIT_REACHED: "Este album ya llego al limite de 150 fotos",
+      PARTICIPANT_PHOTO_LIMIT_REACHED:
+        "Ya alcanzaste el limite de fotos para este album",
+      EVENT_UPLOAD_CLOSED: "Este album ya cerro la subida de fotos",
+      EVENT_CLOSED: "Este album esta cerrado",
+      INVALID_EVENT_PIN: "El PIN del album no es valido",
+      NO_FILES_UPLOADED: "Selecciona al menos una foto",
+    };
+
+    return messages[error.code ?? ""] ?? "No pudimos subir las fotos";
+  }
+
+  return "No pudimos subir las fotos";
 }
 
 async function compressImage(file: File) {
@@ -128,14 +276,14 @@ async function compressImage(file: File) {
     for (const quality of [0.78, 0.68, 0.58]) {
       const blob = await canvasToBlob(canvas, quality);
 
-      if (blob.size <= 1024 * 1024 || quality === 0.58) {
+      if (blob.size <= maxFileSize) {
         return new File([blob], replaceExtension(file.name), {
           type: "image/jpeg",
         });
       }
     }
 
-    return file;
+    throw new Error("IMAGE_TOO_LARGE");
   } finally {
     URL.revokeObjectURL(url);
   }

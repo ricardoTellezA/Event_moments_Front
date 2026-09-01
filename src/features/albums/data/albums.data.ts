@@ -56,6 +56,9 @@ export function buildMockMemories(count: number, spreadHours = 12): AlbumMemory[
   }));
 }
 
+const bodaMemories = buildMockMemories(18, 14);
+const cumpleMemories = buildMockMemories(14, 9);
+
 export const seedAlbums: EventAlbum[] = [
   {
     ...baseAlbum,
@@ -65,7 +68,8 @@ export const seedAlbums: EventAlbum[] = [
     cover: gallerySources[0],
     durationHours: 72,
     createdAt: hoursAgo(20),
-    photos: buildMockMemories(18, 14),
+    photos: bodaMemories,
+    photosCount: bodaMemories.length,
     contributors: 18,
     views: 342,
     allowVoice: true,
@@ -83,7 +87,8 @@ export const seedAlbums: EventAlbum[] = [
     disposableOn: true,
     privacy: "pin",
     pin: "2468",
-    photos: buildMockMemories(14, 9),
+    photos: cumpleMemories,
+    photosCount: cumpleMemories.length,
     contributors: 11,
     views: 128,
   },

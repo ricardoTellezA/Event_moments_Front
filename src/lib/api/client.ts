@@ -4,6 +4,22 @@ type ApiFetchOptions = RequestInit & {
   token?: string | null;
 };
 
+type ApiErrorBody = {
+  code?: string;
+  message?: string | string[];
+};
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly code?: string,
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
 export async function apiFetch<TResponse>(
   path: string,
   { token, headers, ...init }: ApiFetchOptions = {},
@@ -20,7 +36,23 @@ export async function apiFetch<TResponse>(
   });
 
   if (!response.ok) {
-    throw new Error(`API request failed with status ${response.status}`);
+    let errorBody: ApiErrorBody | null = null;
+
+    try {
+      errorBody = (await response.json()) as ApiErrorBody;
+    } catch {
+      errorBody = null;
+    }
+
+    const message = Array.isArray(errorBody?.message)
+      ? errorBody.message.join(", ")
+      : errorBody?.message;
+
+    throw new ApiError(
+      message ?? `API request failed with status ${response.status}`,
+      response.status,
+      errorBody?.code,
+    );
   }
 
   return (await response.json()) as TResponse;
