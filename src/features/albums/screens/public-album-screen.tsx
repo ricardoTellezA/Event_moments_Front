@@ -22,6 +22,7 @@ import { AlbumStatusLabel } from "@/features/albums/components/album-status-labe
 import { MemoryGrid } from "@/features/albums/components/memory-grid";
 import { UploadMemoryDialog } from "@/features/albums/components/upload-memory-dialog";
 import {
+  downloadEventPhotos,
   getPublicEvent,
   recordEventView,
   unlockEventPin,
@@ -48,6 +49,7 @@ export function PublicAlbumScreen({ id }: { id: string }) {
   const [forceReveal, setForceReveal] = useState(false);
   const [rollUsed, setRollUsed] = useState(0);
   const [now, setNow] = useState(0);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -163,6 +165,35 @@ export function PublicAlbumScreen({ id }: { id: string }) {
     toast.success("Voto registrado");
   };
 
+  const handleDownload = async () => {
+    if (downloading) {
+      return;
+    }
+
+    setDownloading(true);
+
+    try {
+      const blob = await downloadEventPhotos(
+        album.id,
+        album.privacy === "pin" ? pin : undefined,
+      );
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = `${album.id}-recuerdos.zip`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("Descarga lista");
+    } catch {
+      toast.error("No pudimos preparar la descarga");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   if (lockedByPin) {
     return (
       <main className="mx-auto max-w-sm px-5 py-24 text-center">
@@ -226,10 +257,13 @@ export function PublicAlbumScreen({ id }: { id: string }) {
             <Button
               variant="outline"
               size="lg"
-              onClick={() => toast.info("Descarga simulada preparada")}
+              disabled={downloading}
+              onClick={() => {
+                void handleDownload();
+              }}
             >
               <DownloadIcon />
-              Descargar todo
+              {downloading ? "Preparando..." : "Descargar todo"}
             </Button>
           ) : null}
           <Button

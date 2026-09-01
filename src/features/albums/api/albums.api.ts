@@ -1,4 +1,4 @@
-import { apiFetch } from "@/lib/api/client";
+import { API_BASE_URL, apiFetch } from "@/lib/api/client";
 import type { EventAlbum } from "@/features/albums/types/album.types";
 import { coverOptions, defaultChallenges } from "@/features/albums/data/albums.data";
 
@@ -210,4 +210,24 @@ export function updateEventPhotoStatus(
       body: JSON.stringify({ status }),
     },
   );
+}
+
+export async function downloadEventPhotos(slug: string, pin?: string) {
+  const searchParams = new URLSearchParams();
+
+  if (pin) {
+    searchParams.set("pin", pin);
+  }
+
+  const response = await fetch(
+    `${API_BASE_URL}/events/${slug}/photos/download${
+      searchParams.size ? `?${searchParams.toString()}` : ""
+    }`,
+  );
+
+  if (!response.ok) {
+    throw new Error(`API download failed with status ${response.status}`);
+  }
+
+  return response.blob();
 }
