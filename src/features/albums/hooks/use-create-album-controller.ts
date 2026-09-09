@@ -6,6 +6,7 @@ import { useAuth } from "@clerk/nextjs";
 import { toast } from "sonner";
 
 import { createEvent } from "@/features/albums/api/albums.api";
+import { getCoverForEventName } from "@/features/albums/data/albums.data";
 
 export function useCreateAlbumController() {
   const router = useRouter();
@@ -54,6 +55,7 @@ export function useCreateAlbumController() {
       const album = await createEvent(
         {
           name,
+          coverUrl: getCoverForEventName(name),
           eventDate: date ? new Date(date).toISOString() : undefined,
           durationHours: Number(duration),
           privacy: privacy === "pin" ? "pin" : "public",

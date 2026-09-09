@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { toast } from "sonner";
 
 import {
   downloadEventPhotos,
+  getAdminEvent,
   getPublicEvent,
   recordEventView,
   unlockEventPin,
@@ -24,39 +26,70 @@ import { mapUploadedPhotoToMemory } from "@/features/albums/lib/photo-mappers";
 import type { EventAlbum } from "@/features/albums/types/album.types";
 
 export function usePublicAlbumController(id: string) {
+  const { getToken, isSignedIn } = useAuth();
   const [album, setAlbum] = useState<EventAlbum | null | undefined>(undefined);
+  const [canManage, setCanManage] = useState(false);
   const [pin, setPin] = useState("");
   const [unlocked, setUnlocked] = useState(false);
   const [forceReveal, setForceReveal] = useState(false);
   const [rollUsed, setRollUsed] = useState(0);
   const [now, setNow] = useState(0);
   const [downloading, setDownloading] = useState(false);
+  const [uploadSuccessCount, setUploadSuccessCount] = useState(0);
+  const [uploadSuccessId, setUploadSuccessId] = useState(0);
+
+  const loadAlbum = useCallback(async (mounted = true) => {
+    try {
+      const nextAlbum = await getPublicEvent(id);
+      let isOwner = false;
+
+      if (isSignedIn) {
+        try {
+          const token = await getToken();
+          await getAdminEvent(id, token);
+          isOwner = true;
+        } catch {
+          isOwner = false;
+        }
+      }
+
+      if (mounted) {
+        setAlbum(nextAlbum);
+        setCanManage(isOwner);
+        setRollUsed(getGuestRollCount(id));
+        setNow(Date.now());
+      }
+    } catch {
+      if (mounted) {
+        setAlbum(null);
+        setCanManage(false);
+      }
+    }
+  }, [getToken, id, isSignedIn]);
 
   useEffect(() => {
     let mounted = true;
-
-    async function loadAlbum() {
-      try {
-        const nextAlbum = await getPublicEvent(id);
-
-        if (mounted) {
-          setAlbum(nextAlbum);
-          setRollUsed(getGuestRollCount(id));
-          setNow(Date.now());
-        }
-      } catch {
-        if (mounted) {
-          setAlbum(null);
-        }
-      }
-    }
-
-    void loadAlbum();
+    const loadTimer = window.setTimeout(() => {
+      void loadAlbum(mounted);
+    }, 0);
 
     return () => {
       mounted = false;
+      window.clearTimeout(loadTimer);
     };
-  }, [id]);
+  }, [loadAlbum]);
+
+  useEffect(() => {
+    let mounted = true;
+    const interval = window.setInterval(() => {
+      void loadAlbum(mounted);
+    }, 15000);
+
+    return () => {
+      mounted = false;
+      window.clearInterval(interval);
+    };
+  }, [loadAlbum]);
 
   useEffect(() => {
     const interval = window.setInterval(() => setNow(Date.now()), 30000);
@@ -96,7 +129,11 @@ export function usePublicAlbumController(id: string) {
     album && uploadOpen ? formatMsLeft(getUploadMsLeft(album, now)) : undefined;
   const revealMsLeft = album ? getRevealMsLeft(album, now) : 0;
 
-  const handleUpload = async (guest: string, files: File[]) => {
+  const handleUpload = async (
+    guest: string,
+    files: File[],
+    onProgress?: (progress: number) => void,
+  ) => {
     if (!album || !uploadOpen || remainingRoll <= 0) {
       toast.error(
         remainingRoll <= 0 ? "Ya usaste todas tus fotos" : "El album esta cerrado",
@@ -104,16 +141,22 @@ export function usePublicAlbumController(id: string) {
       return;
     }
 
+    setUploadSuccessCount(0);
+
     const uploadedPhotos = await uploadEventPhotos({
       slug: album.id,
       guest,
       pin: album.privacy === "pin" ? pin : undefined,
       files,
+      onProgress,
     });
 
     addGuestRollCount(album.id, uploadedPhotos.length);
     setRollUsed((current) => current + uploadedPhotos.length);
     appendUploadedPhotos(uploadedPhotos);
+    setUploadSuccessCount(uploadedPhotos.length);
+    setUploadSuccessId((current) => current + 1);
+    void loadAlbum();
   };
 
   const appendUploadedPhotos = (uploadedPhotos: UploadedApiPhoto[]) => {
@@ -158,10 +201,8 @@ export function usePublicAlbumController(id: string) {
     setDownloading(true);
 
     try {
-      const blob = await downloadEventPhotos(
-        album.id,
-        album.privacy === "pin" ? pin : undefined,
-      );
+      const token = await getToken();
+      const blob = await downloadEventPhotos(album.id, token);
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
 
@@ -194,6 +235,7 @@ export function usePublicAlbumController(id: string) {
 
   return {
     album,
+    canManage,
     downloading,
     lockedByPin,
     pin,
@@ -204,10 +246,13 @@ export function usePublicAlbumController(id: string) {
     status,
     uploadMsLabel,
     uploadOpen,
+    uploadSuccessCount,
+    uploadSuccessId,
     handleDownload,
     handleUnlockPin,
     handleUpload,
     handleVote,
+    dismissUploadSuccess: () => setUploadSuccessCount(0),
     setForceReveal,
     setPin,
   };

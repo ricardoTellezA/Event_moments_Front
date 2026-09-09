@@ -251,3 +251,32 @@
     transition: none;
   }
 }
+
+@page {
+  size: letter portrait;
+  margin: 0.35in;
+}
+
+@media print {
+  html,
+  body {
+    min-height: auto !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .qr-print-root {
+    min-height: auto !important;
+    padding: 0 !important;
+  }
+
+  .qr-print-sheet {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    height: calc(11in - 0.7in);
+    max-height: calc(11in - 0.7in);
+    border-radius: 0.32in !important;
+    overflow: hidden;
+  }
+}

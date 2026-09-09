@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, QrCodeIcon } from "lucide-react";
 
 import { ScrollReveal } from "@/components/shared/scroll-reveal/scroll-reveal";
 import { Button } from "@/components/ui/button";
@@ -35,13 +35,23 @@ export function AdminAlbumHeader({
             Panel para moderar recuerdos, compartir el evento y ajustar permisos.
           </p>
         </div>
-        <Button
-          className="bg-afterglow"
-          nativeButton={false}
-          render={<Link href={`/a/${albumId}`} />}
-        >
-          Ver album publico
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link href={`/a/${albumId}/qr`} />}
+          >
+            <QrCodeIcon />
+            QR para imprimir
+          </Button>
+          <Button
+            className="bg-afterglow"
+            nativeButton={false}
+            render={<Link href={`/a/${albumId}`} />}
+          >
+            Ver album publico
+          </Button>
+        </div>
       </div>
     </ScrollReveal>
   );

@@ -1,10 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
 import { PageContainer } from "@/components/shared/page-container/page-container";
 import { ScrollReveal } from "@/components/shared/scroll-reveal/scroll-reveal";
 import { Button } from "@/components/ui/button";
 
 export function FinalCtaSection() {
+  const { isLoaded, isSignedIn } = useUser();
+  const createHref =
+    isLoaded && isSignedIn ? "/crear" : "/sign-in?redirect_url=%2Fcrear";
+
   return (
     <section className="pb-20">
       <PageContainer>
@@ -19,7 +26,7 @@ export function FinalCtaSection() {
             size="lg"
             className="mt-8 bg-card text-foreground hover:bg-card/90"
             nativeButton={false}
-            render={<Link href="/crear" />}
+            render={<Link href={createHref} />}
           >
             Crear mi album
           </Button>

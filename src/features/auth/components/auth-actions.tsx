@@ -1,12 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  SignInButton,
-  SignUpButton,
-  UserButton,
-  useUser,
-} from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { ImagesIcon, PlusIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -42,23 +37,23 @@ export function AuthActions({ layout = "desktop" }: AuthActionsProps) {
 
       {isLoaded && !isSignedIn ? (
         <>
-          <SignInButton mode="modal">
-            <Button
-              variant={isMobile ? "outline" : "ghost"}
-              size={isMobileHeader ? "xs" : "default"}
-              className={cn(isMobileHeader && "px-2.5")}
-            >
-              Entrar
-            </Button>
-          </SignInButton>
-          <SignUpButton mode="modal">
-            <Button
-              size={isMobileHeader ? "xs" : "default"}
-              className={cn("bg-afterglow shadow-soft", isMobileHeader && "px-3")}
-            >
-              Crear
-            </Button>
-          </SignUpButton>
+          <Button
+            variant={isMobile ? "outline" : "ghost"}
+            size={isMobileHeader ? "xs" : "default"}
+            className={cn(isMobileHeader && "px-2.5")}
+            nativeButton={false}
+            render={<Link href="/sign-in" />}
+          >
+            Entrar
+          </Button>
+          <Button
+            size={isMobileHeader ? "xs" : "default"}
+            className={cn("bg-afterglow shadow-soft", isMobileHeader && "px-3")}
+            nativeButton={false}
+            render={<Link href="/sign-up" />}
+          >
+            Crear
+          </Button>
         </>
       ) : null}
 

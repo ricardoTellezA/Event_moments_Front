@@ -1,6 +1,9 @@
 import { API_BASE_URL, apiFetch } from "@/lib/api/client";
 import type { EventAlbum } from "@/features/albums/types/album.types";
-import { coverOptions, defaultChallenges } from "@/features/albums/data/albums.data";
+import {
+  defaultChallenges,
+  getCoverForEventName,
+} from "@/features/albums/data/albums.data";
 
 export type ApiEvent = {
   id: string;
@@ -41,6 +44,7 @@ export type ApiEvent = {
 
 export type CreateEventInput = {
   name: string;
+  coverUrl?: string;
   eventDate?: string;
   durationHours: number;
   privacy: "public" | "pin";
@@ -60,6 +64,7 @@ export type CreateEventInput = {
 export type UpdateEventInput = Partial<{
   name: string;
   description: string | null;
+  coverUrl: string | null;
   eventDate: string | null;
   durationHours: number;
   status: "draft" | "active" | "closed" | "frozen";
@@ -78,7 +83,7 @@ export type UpdateEventInput = Partial<{
 }>;
 
 export function mapApiEventToAlbum(event: ApiEvent): EventAlbum {
-  const cover = event.coverUrl ?? coverOptions[0];
+  const cover = event.coverUrl ?? getCoverForEventName(event.name);
   const photos =
     event.photos?.map((photo) => ({
       id: photo.id,
@@ -183,11 +188,13 @@ export async function uploadEventPhotos({
   guest,
   pin,
   files,
+  onProgress,
 }: {
   slug: string;
   guest: string;
   pin?: string;
   files: File[];
+  onProgress?: (progress: number) => void;
 }) {
   const formData = new FormData();
   formData.set("displayName", guest.trim() || "Invitado");
@@ -198,10 +205,64 @@ export async function uploadEventPhotos({
 
   files.forEach((file) => formData.append("files", file));
 
-  return apiFetch<UploadedApiPhoto[]>(`/events/${slug}/photos`, {
-    method: "POST",
-    body: formData,
+  if (!onProgress) {
+    return apiFetch<UploadedApiPhoto[]>(`/events/${slug}/photos`, {
+      method: "POST",
+      body: formData,
+    });
+  }
+
+  return uploadWithProgress<UploadedApiPhoto[]>(
+    `${API_BASE_URL}/events/${slug}/photos`,
+    formData,
+    onProgress,
+  );
+}
+
+function uploadWithProgress<TResponse>(
+  url: string,
+  body: FormData,
+  onProgress: (progress: number) => void,
+) {
+  return new Promise<TResponse>((resolve, reject) => {
+    const request = new XMLHttpRequest();
+
+    request.open("POST", url);
+    request.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        onProgress(Math.min(99, Math.round((event.loaded / event.total) * 100)));
+      }
+    };
+    request.onload = () => {
+      if (request.status >= 200 && request.status < 300) {
+        onProgress(100);
+        resolve(JSON.parse(request.responseText) as TResponse);
+        return;
+      }
+
+      reject(parseXhrError(request));
+    };
+    request.onerror = () => reject(new Error("NETWORK_ERROR"));
+    request.send(body);
   });
+}
+
+function parseXhrError(request: XMLHttpRequest) {
+  try {
+    const body = JSON.parse(request.responseText) as {
+      code?: string;
+      message?: string | string[];
+    };
+    const message = Array.isArray(body.message)
+      ? body.message.join(", ")
+      : body.message;
+
+    return new Error(message ?? `API request failed with status ${request.status}`, {
+      cause: body.code,
+    });
+  } catch {
+    return new Error(`API request failed with status ${request.status}`);
+  }
 }
 
 export function removeEventPhoto(
@@ -231,18 +292,12 @@ export function updateEventPhotoStatus(
   );
 }
 
-export async function downloadEventPhotos(slug: string, pin?: string) {
-  const searchParams = new URLSearchParams();
-
-  if (pin) {
-    searchParams.set("pin", pin);
-  }
-
-  const response = await fetch(
-    `${API_BASE_URL}/events/${slug}/photos/download${
-      searchParams.size ? `?${searchParams.toString()}` : ""
-    }`,
-  );
+export async function downloadEventPhotos(slug: string, token: string | null) {
+  const response = await fetch(`${API_BASE_URL}/events/${slug}/photos/download`, {
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
 
   if (!response.ok) {
     throw new Error(`API download failed with status ${response.status}`);

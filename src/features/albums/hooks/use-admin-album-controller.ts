@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { toast } from "sonner";
 
@@ -18,10 +18,8 @@ export function useAdminAlbumController(id: string) {
   const [album, setAlbum] = useState<EventAlbum | null | undefined>(undefined);
   const shareUrl = useMemo(() => albumUrl(id), [id]);
 
-  useEffect(() => {
-    let mounted = true;
-
-    async function loadAlbum() {
+  const refreshAlbum = useCallback(
+    async (mounted = true, failToNull = false) => {
       try {
         const token = await getToken();
         const nextAlbum = await getAdminEvent(id, token);
@@ -30,18 +28,37 @@ export function useAdminAlbumController(id: string) {
           setAlbum(nextAlbum);
         }
       } catch {
-        if (mounted) {
+        if (mounted && failToNull) {
           setAlbum(null);
         }
       }
-    }
+    },
+    [getToken, id],
+  );
 
-    void loadAlbum();
+  useEffect(() => {
+    let mounted = true;
+    const loadTimer = window.setTimeout(() => {
+      void refreshAlbum(mounted, true);
+    }, 0);
 
     return () => {
       mounted = false;
+      window.clearTimeout(loadTimer);
     };
-  }, [getToken, id]);
+  }, [refreshAlbum]);
+
+  useEffect(() => {
+    let mounted = true;
+    const interval = window.setInterval(() => {
+      void refreshAlbum(mounted);
+    }, 12000);
+
+    return () => {
+      mounted = false;
+      window.clearInterval(interval);
+    };
+  }, [refreshAlbum]);
 
   const status = album ? getAlbumStatus(album) : undefined;
   const pendingPhotos = album?.photos.filter((photo) => photo.status === "pending") ?? [];
@@ -110,6 +127,7 @@ export function useAdminAlbumController(id: string) {
     try {
       const token = await getToken();
       await updateEventPhotoStatus(album.dbId ?? album.id, photoId, nextStatus, token);
+      void refreshAlbum();
       toast.success(
         nextStatus === "approved" ? "Recuerdo aprobado" : "Recuerdo rechazado",
       );
@@ -133,6 +151,7 @@ export function useAdminAlbumController(id: string) {
     try {
       const token = await getToken();
       await removeEventPhoto(album.dbId ?? album.id, photoId, token);
+      void refreshAlbum();
       toast.success("Recuerdo eliminado");
     } catch {
       setAlbum(previousAlbum);

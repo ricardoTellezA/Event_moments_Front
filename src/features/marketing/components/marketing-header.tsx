@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 import { MenuIcon } from "lucide-react";
 
 import { AppLogo } from "@/components/shared/app-logo/app-logo";
@@ -17,6 +18,12 @@ import {
 import { marketingNavItems } from "@/features/marketing/data/marketing.data";
 
 export function MarketingHeader() {
+  const { isLoaded, isSignedIn } = useUser();
+  const getGuestHref = (href: string) =>
+    href === "/mis-albumes" && isLoaded && !isSignedIn
+      ? `/sign-in?redirect_url=${encodeURIComponent(href)}`
+      : href;
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <PageContainer className="flex h-16 items-center justify-between gap-3 px-4 sm:px-5">
@@ -26,7 +33,7 @@ export function MarketingHeader() {
           {marketingNavItems.map((item) => (
             <Link
               key={item.href}
-              href={item.href}
+              href={getGuestHref(item.href)}
               className="transition-colors hover:text-foreground"
             >
               {item.label}
@@ -50,7 +57,7 @@ export function MarketingHeader() {
               {marketingNavItems.map((item) => (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={getGuestHref(item.href)}
                   className="rounded-2xl px-3 py-3 text-body-sm hover:bg-muted"
                 >
                   {item.label}

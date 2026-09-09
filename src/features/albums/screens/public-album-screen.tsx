@@ -15,12 +15,14 @@ import {
   RevealPendingCard,
 } from "@/features/albums/components/public-album-state-cards";
 import { PublicAlbumTabs } from "@/features/albums/components/public-album-tabs";
+import { PublicUploadSuccessCard } from "@/features/albums/components/public-upload-success-card";
 import { usePublicAlbumController } from "@/features/albums/hooks/use-public-album-controller";
 
 export function PublicAlbumScreen({ id }: { id: string }) {
   const albumController = usePublicAlbumController(id);
   const {
     album,
+    canManage,
     downloading,
     lockedByPin,
     pin,
@@ -31,6 +33,9 @@ export function PublicAlbumScreen({ id }: { id: string }) {
     status,
     uploadMsLabel,
     uploadOpen,
+    uploadSuccessCount,
+    uploadSuccessId,
+    dismissUploadSuccess,
     handleDownload,
     handleUnlockPin,
     handleUpload,
@@ -85,6 +90,7 @@ export function PublicAlbumScreen({ id }: { id: string }) {
       <div className="mx-auto w-full max-w-6xl space-y-12 px-5 py-10">
         <PublicAlbumActions
           albumId={album.id}
+          canManage={canManage}
           canUpload={uploadOpen}
           canDownload={album.allowDownload && !revealPending}
           downloading={downloading}
@@ -92,6 +98,11 @@ export function PublicAlbumScreen({ id }: { id: string }) {
           remainingRoll={remainingRoll}
           onUpload={handleUpload}
           onDownload={handleDownload}
+        />
+        <PublicUploadSuccessCard
+          key={uploadSuccessId}
+          count={uploadSuccessCount}
+          onDismiss={dismissUploadSuccess}
         />
         {album.frozen ? <FrozenAlbumCard album={album} /> : null}
         {revealPending ? (

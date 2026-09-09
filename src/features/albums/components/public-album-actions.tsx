@@ -9,6 +9,7 @@ import { UploadMemoryDialog } from "@/features/albums/components/upload-memory-d
 
 export function PublicAlbumActions({
   albumId,
+  canManage,
   canUpload,
   canDownload,
   downloading,
@@ -18,12 +19,17 @@ export function PublicAlbumActions({
   onDownload,
 }: {
   albumId: string;
+  canManage: boolean;
   canUpload: boolean;
   canDownload: boolean;
   downloading: boolean;
   uploadMsLabel?: string;
   remainingRoll: number;
-  onUpload: (guest: string, files: File[]) => Promise<void>;
+  onUpload: (
+    guest: string,
+    files: File[],
+    onProgress?: (progress: number) => void,
+  ) => Promise<void>;
   onDownload: () => void;
 }) {
   return (
@@ -33,7 +39,7 @@ export function PublicAlbumActions({
         maxFiles={Number.isFinite(remainingRoll) ? Math.min(12, remainingRoll) : 12}
         onUpload={onUpload}
       />
-      {canDownload ? (
+      {canManage && canDownload ? (
         <Button
           variant="outline"
           size="lg"
@@ -44,15 +50,17 @@ export function PublicAlbumActions({
           {downloading ? "Preparando..." : "Descargar todo"}
         </Button>
       ) : null}
-      <Button
-        variant="ghost"
-        size="lg"
-        nativeButton={false}
-        render={<Link href={`/a/${albumId}/administrar`} />}
-      >
-        <SettingsIcon />
-        Administrar
-      </Button>
+      {canManage ? (
+        <Button
+          variant="ghost"
+          size="lg"
+          nativeButton={false}
+          render={<Link href={`/a/${albumId}/administrar`} />}
+        >
+          <SettingsIcon />
+          Administrar
+        </Button>
+      ) : null}
       {uploadMsLabel ? (
         <span className="rounded-full bg-muted px-3 py-1.5 text-sm text-muted-foreground">
           {uploadMsLabel} restantes

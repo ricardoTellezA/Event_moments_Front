@@ -13,6 +13,23 @@ const gallerySources = [
   "https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&w=900&q=80",
 ];
 
+export const eventCoverOptions = {
+  wedding:
+    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
+  birthday:
+    "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1200&q=80",
+  party:
+    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80",
+  graduation:
+    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=80",
+  trip:
+    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+  family:
+    "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1200&q=80",
+  default:
+    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80",
+};
+
 const guests = ["Ricardo", "Andrea", "Carlos", "Sofia", "Invitado anonimo"];
 
 export const defaultChallenges: PhotoChallenge[] = [
@@ -95,3 +112,36 @@ export const seedAlbums: EventAlbum[] = [
 ];
 
 export const coverOptions = gallerySources;
+
+export function getCoverForEventName(name: string) {
+  const normalized = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  if (/\b(boda|casamiento|matrimonio|wedding)\b/.test(normalized)) {
+    return eventCoverOptions.wedding;
+  }
+
+  if (/\b(cumple|cumpleanos|birthday|fiesta)\b/.test(normalized)) {
+    return eventCoverOptions.birthday;
+  }
+
+  if (/\b(party|antro|noche|celebracion)\b/.test(normalized)) {
+    return eventCoverOptions.party;
+  }
+
+  if (/\b(graduacion|graduation|egreso)\b/.test(normalized)) {
+    return eventCoverOptions.graduation;
+  }
+
+  if (/\b(viaje|trip|playa|vacaciones)\b/.test(normalized)) {
+    return eventCoverOptions.trip;
+  }
+
+  if (/\b(familia|family|reunion)\b/.test(normalized)) {
+    return eventCoverOptions.family;
+  }
+
+  return eventCoverOptions.default;
+}

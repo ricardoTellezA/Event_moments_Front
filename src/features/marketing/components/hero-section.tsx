@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 import { ArrowRightIcon, SparklesIcon } from "lucide-react";
 
 import { PageContainer } from "@/components/shared/page-container/page-container";
@@ -7,6 +10,10 @@ import { Button } from "@/components/ui/button";
 import { HeroEventPreview } from "@/features/marketing/components/hero-event-preview";
 
 export function HeroSection() {
+  const { isLoaded, isSignedIn } = useUser();
+  const createHref =
+    isLoaded && isSignedIn ? "/crear" : "/sign-in?redirect_url=%2Fcrear";
+
   return (
     <section className="relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 bg-soft-gradient" />
@@ -29,7 +36,7 @@ export function HeroSection() {
               size="lg"
               className="bg-afterglow shadow-lifted"
               nativeButton={false}
-              render={<Link href="/crear" />}
+              render={<Link href={createHref} />}
             >
               Crear mi album
               <ArrowRightIcon />

@@ -35,7 +35,11 @@ export function UploadMemoryDialog({
 }: {
   disabled?: boolean;
   maxFiles?: number;
-  onUpload: (guest: string, files: File[]) => Promise<void>;
+  onUpload: (
+    guest: string,
+    files: File[],
+    onProgress?: (progress: number) => void,
+  ) => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
   const [guest, setGuest] = useState("");
@@ -81,8 +85,10 @@ export function UploadMemoryDialog({
       }
 
       setUploadPhase("uploading");
-      setProgress(82);
-      await onUpload(guest, compressedFiles);
+      setProgress(72);
+      await onUpload(guest, compressedFiles, (uploadProgress) => {
+        setProgress(72 + Math.round(uploadProgress * 0.28));
+      });
       setProgress(100);
       setGuest("");
       resetSelection();
@@ -240,20 +246,31 @@ function getUploadErrorMessage(error: unknown) {
   }
 
   if (error instanceof ApiError) {
-    const messages: Record<string, string> = {
-      EVENT_PHOTO_LIMIT_REACHED: "Este album ya llego al limite de 150 fotos",
-      PARTICIPANT_PHOTO_LIMIT_REACHED:
-        "Ya alcanzaste el limite de fotos para este album",
-      EVENT_UPLOAD_CLOSED: "Este album ya cerro la subida de fotos",
-      EVENT_CLOSED: "Este album esta cerrado",
-      INVALID_EVENT_PIN: "El PIN del album no es valido",
-      NO_FILES_UPLOADED: "Selecciona al menos una foto",
-    };
+    return getUploadErrorCodeMessage(error.code);
+  }
 
-    return messages[error.code ?? ""] ?? "No pudimos subir las fotos";
+  if (error instanceof Error && typeof error.cause === "string") {
+    return getUploadErrorCodeMessage(error.cause);
   }
 
   return "No pudimos subir las fotos";
+}
+
+function getUploadErrorCodeMessage(code?: string) {
+  const messages: Record<string, string> = {
+    EVENT_PHOTO_LIMIT_REACHED: "Este album ya llego al limite de 150 fotos",
+    PARTICIPANT_PHOTO_LIMIT_REACHED:
+      "Ya alcanzaste el limite de fotos para este album",
+    EVENT_UPLOAD_CLOSED: "Este album ya cerro la subida de fotos",
+    EVENT_CLOSED: "Este album esta cerrado",
+    INVALID_EVENT_PIN: "El PIN del album no es valido",
+    INVALID_FILE_TYPE: "Una de las fotos no es una imagen valida",
+    NO_FILES_UPLOADED: "Selecciona al menos una foto",
+    UPLOAD_RATE_LIMITED:
+      "Hay demasiadas subidas seguidas. Intenta de nuevo en unos minutos",
+  };
+
+  return messages[code ?? ""] ?? "No pudimos subir las fotos";
 }
 
 async function compressImage(file: File) {
