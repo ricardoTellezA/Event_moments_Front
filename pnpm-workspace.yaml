@@ -1,8 +1,8 @@
 onlyBuiltDependencies:
   - bufferutil
   - core-js
+  - unrs-resolver
   - utf-8-validate
 
 ignoredBuiltDependencies:
   - sharp
-  - unrs-resolver
