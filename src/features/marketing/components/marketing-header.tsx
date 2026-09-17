@@ -51,7 +51,7 @@ export function MarketingHeader() {
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>
-              <SheetTitle>Event Moments</SheetTitle>
+              <SheetTitle>Keeps</SheetTitle>
             </SheetHeader>
             <nav className="mt-8 grid gap-3">
               {marketingNavItems.map((item) => (

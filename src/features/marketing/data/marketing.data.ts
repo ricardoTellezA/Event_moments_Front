@@ -95,7 +95,7 @@ export const pricingPlans = [
     features: ["1 album", "24 horas", "Hasta 100 fotos", "QR compartible"],
   },
   {
-    name: "Event Pass",
+    name: "Keeps Pass",
     eyebrow: "Mas elegido",
     price: "$79",
     suffix: "MXN / evento",

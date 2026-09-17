@@ -12,7 +12,7 @@ export function DesignSystemHeader() {
       </div>
       <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_320px] lg:items-end">
         <div>
-          <h1 className="text-display-lg">Event Moments</h1>
+          <h1 className="text-display-lg">Keeps</h1>
           <p className="mt-3 max-w-2xl text-body-lg text-muted-foreground">
             Sistema visual base para revisar tokens, primitives, estados y
             comportamiento responsive antes de construir pantallas finales.

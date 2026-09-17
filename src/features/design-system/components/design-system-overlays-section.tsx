@@ -45,7 +45,10 @@ export function DesignSystemOverlaysSection() {
   return (
     <DesignSection title="Overlays y feedback">
       <div className="flex flex-wrap gap-3">
-        <ShareEventDialog eventName="Boda Ana & Luis" url="eventmoments.com/e/abc123" />
+        <ShareEventDialog
+          eventName="Boda Ana & Luis"
+          url="keeps.tellez.website/e/abc123"
+        />
         <DeleteDialogDemo />
         <UpgradeDialogDemo />
         <SheetDemo />
@@ -100,7 +103,7 @@ function UpgradeDialogDemo() {
           </DialogDescription>
         </DialogHeader>
         <div className="rounded-3xl bg-soft-gradient p-5">
-          <p className="text-heading-3">Event Pass</p>
+          <p className="text-heading-3">Keeps Pass</p>
           <p className="mt-1 text-body-sm text-muted-foreground">
             30 dias, 1,000 fotos y descarga completa.
           </p>

@@ -17,7 +17,7 @@ export function AppLogo({ href = "/", compact = false, className }: AppLogoProps
       </span>
       {!compact ? (
         <span className="font-heading text-lg font-semibold tracking-tight">
-          Event Moments
+          Keeps
         </span>
       ) : null}
     </Link>

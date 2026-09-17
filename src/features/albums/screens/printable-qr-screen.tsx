@@ -63,7 +63,7 @@ export function PrintableQrScreen({ id }: { id: string }) {
                 <span className="grid size-12 place-items-center rounded-2xl bg-afterglow text-primary-foreground shadow-soft">
                   <CameraIcon className="size-5" />
                 </span>
-                <span className="text-label text-background">Event Moments</span>
+                <span className="text-label text-background">Keeps</span>
               </div>
               <span className="rounded-full bg-background/92 px-4 py-2 text-xs font-semibold text-foreground">
                 Sin cuenta para invitados

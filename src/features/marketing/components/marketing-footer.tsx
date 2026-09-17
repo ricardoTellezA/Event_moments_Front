@@ -6,7 +6,7 @@ export function MarketingFooter() {
     <footer className="border-t border-border/60 py-10">
       <PageContainer className="flex flex-col items-center gap-3 text-body-sm text-muted-foreground sm:flex-row sm:justify-between">
         <AppLogo />
-        <p>Hecho para recordar. Event Moments 2026</p>
+        <p>Hecho para recordar. Keeps 2026</p>
       </PageContainer>
     </footer>
   );

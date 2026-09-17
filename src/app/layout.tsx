@@ -18,7 +18,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Event Moments",
+  title: "Keeps",
   description: "Todas las fotos de tu evento en un solo lugar.",
 };
 
@@ -32,6 +32,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ClerkProvider
           signInUrl="/sign-in"
           signUpUrl="/sign-up"
+          signInFallbackRedirectUrl="/mis-albumes"
+          signUpFallbackRedirectUrl="/mis-albumes"
           afterSignOutUrl="/"
           appearance={{
             variables: {

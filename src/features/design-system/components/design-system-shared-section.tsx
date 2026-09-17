@@ -23,11 +23,11 @@ export function DesignSystemSharedSection() {
             action={<Button size="sm">Accion</Button>}
           />
         </div>
-        <QrCard url="eventmoments.com/e/abc123" />
+        <QrCard url="keeps.tellez.website/e/abc123" />
         <div className="rounded-3xl border border-border bg-soft-gradient p-5">
           <Countdown label="Se revelan en" hours={3} minutes={14} seconds={28} />
           <div className="mt-4">
-            <CopyButton value="eventmoments.com/e/abc123" />
+            <CopyButton value="keeps.tellez.website/e/abc123" />
           </div>
         </div>
       </div>
