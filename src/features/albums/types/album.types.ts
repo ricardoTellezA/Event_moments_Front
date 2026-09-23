@@ -13,6 +13,7 @@ export type PhotoChallenge = {
 export type AlbumMemory = {
   id: string;
   src: string;
+  originalSrc?: string;
   alt: string;
   kind: MemoryKind;
   guest: string;

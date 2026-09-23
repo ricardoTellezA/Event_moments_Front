@@ -158,7 +158,11 @@ function BookPhoto({
   return (
     <figure className={`relative min-h-44 overflow-hidden bg-muted ${className ?? ""}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={photo.src} alt={photo.alt} className="size-full object-cover" />
+      <img
+        src={photo.originalSrc ?? photo.src}
+        alt={photo.alt}
+        className="size-full object-cover"
+      />
       <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent p-3 text-xs font-semibold text-background">
         {photo.guest}
       </figcaption>

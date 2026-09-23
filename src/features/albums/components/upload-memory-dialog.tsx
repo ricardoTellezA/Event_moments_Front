@@ -18,7 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Progress, ProgressLabel } from "@/components/ui/progress";
 import { ApiError } from "@/lib/api/client";
 
-const maxFileSize = 1024 * 1024;
+const maxFileSize = 4 * 1024 * 1024;
+const maxImageSide = 2400;
 
 type SelectedMemory = {
   id: string;
@@ -242,7 +243,7 @@ export function UploadMemoryDialog({
 
 function getUploadErrorMessage(error: unknown) {
   if (error instanceof Error && error.message === "IMAGE_TOO_LARGE") {
-    return "Una foto sigue pesando mas de 1 MB despues de optimizarla";
+    return "Una foto sigue pesando mas de 4 MB despues de optimizarla";
   }
 
   if (error instanceof ApiError) {
@@ -281,8 +282,7 @@ async function compressImage(file: File) {
     image.src = url;
     await image.decode();
 
-    const maxSide = 1200;
-    const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+    const scale = Math.min(1, maxImageSide / Math.max(image.width, image.height));
     const width = Math.max(1, Math.round(image.width * scale));
     const height = Math.max(1, Math.round(image.height * scale));
     const canvas = document.createElement("canvas");
@@ -290,7 +290,7 @@ async function compressImage(file: File) {
     canvas.height = height;
     canvas.getContext("2d")?.drawImage(image, 0, 0, width, height);
 
-    for (const quality of [0.78, 0.68, 0.58]) {
+    for (const quality of [0.9, 0.82, 0.74]) {
       const blob = await canvasToBlob(canvas, quality);
 
       if (blob.size <= maxFileSize) {

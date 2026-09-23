@@ -88,6 +88,7 @@ export function mapApiEventToAlbum(event: ApiEvent): EventAlbum {
     event.photos?.map((photo) => ({
       id: photo.id,
       src: photo.thumbnailUrl ?? photo.url,
+      originalSrc: photo.url,
       alt: `Recuerdo de ${event.name}`,
       kind: photo.mimeType.startsWith("video/") ? ("video" as const) : ("photo" as const),
       guest: photo.guest,
