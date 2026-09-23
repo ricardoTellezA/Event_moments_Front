@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftIcon, BookOpenIcon, QrCodeIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  BookOpenIcon,
+  MonitorPlayIcon,
+  QrCodeIcon,
+} from "lucide-react";
 
 import { ScrollReveal } from "@/components/shared/scroll-reveal/scroll-reveal";
 import { Button } from "@/components/ui/button";
@@ -36,6 +41,14 @@ export function AdminAlbumHeader({
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link href={`/a/${albumId}/live`} />}
+          >
+            <MonitorPlayIcon />
+            Pantalla en vivo
+          </Button>
           <Button
             variant="outline"
             nativeButton={false}
