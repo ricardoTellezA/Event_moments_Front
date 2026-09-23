@@ -279,4 +279,23 @@
     border-radius: 0.32in !important;
     overflow: hidden;
   }
+
+  .memory-book-root {
+    min-height: auto !important;
+    padding: 0 !important;
+  }
+
+  .memory-book-page {
+    width: calc(8.5in - 0.7in);
+    min-height: calc(11in - 0.7in);
+    height: calc(11in - 0.7in);
+    break-after: page;
+    page-break-after: always;
+    overflow: hidden;
+  }
+
+  .memory-book-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
 }
