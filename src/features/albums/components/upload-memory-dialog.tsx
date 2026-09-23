@@ -30,10 +30,12 @@ type SelectedMemory = {
 type UploadPhase = "idle" | "compressing" | "uploading";
 
 export function UploadMemoryDialog({
+  albumId,
   disabled,
   maxFiles = 12,
   onUpload,
 }: {
+  albumId: string;
   disabled?: boolean;
   maxFiles?: number;
   onUpload: (
@@ -43,7 +45,7 @@ export function UploadMemoryDialog({
   ) => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
-  const [guest, setGuest] = useState("");
+  const [guest, setGuest] = useState(() => readGuestName(albumId));
   const [selectedMemories, setSelectedMemories] = useState<SelectedMemory[]>([]);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
@@ -54,6 +56,7 @@ export function UploadMemoryDialog({
     () => selectedMemories.map((memory) => memory.file),
     [selectedMemories],
   );
+  const guestNameStorageKey = useMemo(() => getGuestNameStorageKey(albumId), [albumId]);
 
   useEffect(() => {
     return () => {
@@ -87,11 +90,14 @@ export function UploadMemoryDialog({
 
       setUploadPhase("uploading");
       setProgress(72);
-      await onUpload(guest, compressedFiles, (uploadProgress) => {
+      const displayName = guest.trim() || "Invitado";
+
+      await onUpload(displayName, compressedFiles, (uploadProgress) => {
         setProgress(72 + Math.round(uploadProgress * 0.28));
       });
+      saveGuestName(guestNameStorageKey, displayName);
       setProgress(100);
-      setGuest("");
+      setGuest(displayName);
       resetSelection();
       setOpen(false);
       toast.success(
@@ -325,4 +331,24 @@ function canvasToBlob(canvas: HTMLCanvasElement, quality: number) {
 
 function replaceExtension(fileName: string) {
   return fileName.replace(/\.[^.]+$/, "") + ".jpg";
+}
+
+function getGuestNameStorageKey(albumId: string) {
+  return `keeps.guestName.${albumId}`;
+}
+
+function readGuestName(albumId: string) {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  return window.localStorage.getItem(getGuestNameStorageKey(albumId)) ?? "";
+}
+
+function saveGuestName(key: string, guestName: string) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.setItem(key, guestName);
 }

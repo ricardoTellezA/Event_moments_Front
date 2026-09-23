@@ -35,6 +35,7 @@ export function PublicAlbumActions({
   return (
     <ScrollReveal className="flex flex-wrap items-center gap-3">
       <UploadMemoryDialog
+        albumId={albumId}
         disabled={!canUpload || remainingRoll <= 0}
         maxFiles={Number.isFinite(remainingRoll) ? Math.min(12, remainingRoll) : 12}
         onUpload={onUpload}
