@@ -5,29 +5,29 @@ import type {
 } from "@/features/albums/types/album.types";
 
 const gallerySources = [
-  "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&w=2400&q=90",
+  "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&w=2400&q=90",
+  "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&w=2400&q=90",
+  "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&w=2400&q=90",
+  "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&w=2400&q=90",
+  "https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&w=2400&q=90",
 ];
 
 export const eventCoverOptions = {
   wedding:
-    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&w=2400&q=90",
   birthday:
-    "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&w=2400&q=90",
   party:
-    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&w=2400&q=90",
   graduation:
-    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&w=2400&q=90",
   trip:
-    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&w=2400&q=90",
   family:
-    "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&w=2400&q=90",
   default:
-    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&w=2400&q=90",
 };
 
 const guests = ["Ricardo", "Andrea", "Carlos", "Sofia", "Invitado anonimo"];
@@ -62,6 +62,7 @@ export function buildMockMemories(count: number, spreadHours = 12): AlbumMemory[
   return Array.from({ length: count }, (_, index) => ({
     id: `memory-${index}-${Math.random().toString(36).slice(2, 7)}`,
     src: gallerySources[index % gallerySources.length],
+    originalSrc: gallerySources[index % gallerySources.length],
     alt: `Recuerdo ${index + 1}`,
     kind: index % 11 === 0 ? "video" : "photo",
     guest: guests[index % guests.length],
