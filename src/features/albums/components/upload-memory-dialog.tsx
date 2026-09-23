@@ -33,18 +33,22 @@ export function UploadMemoryDialog({
   albumId,
   disabled,
   maxFiles = 12,
+  open,
+  onOpenChange,
   onUpload,
 }: {
   albumId: string;
   disabled?: boolean;
   maxFiles?: number;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   onUpload: (
     guest: string,
     files: File[],
     onProgress?: (progress: number) => void,
   ) => Promise<void>;
 }) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
   const [guest, setGuest] = useState(() => readGuestName(albumId));
   const [selectedMemories, setSelectedMemories] = useState<SelectedMemory[]>([]);
   const [fileInputKey, setFileInputKey] = useState(0);
@@ -57,6 +61,8 @@ export function UploadMemoryDialog({
     [selectedMemories],
   );
   const guestNameStorageKey = useMemo(() => getGuestNameStorageKey(albumId), [albumId]);
+  const isOpen = open ?? internalOpen;
+  const setOpen = onOpenChange ?? setInternalOpen;
 
   useEffect(() => {
     return () => {
@@ -115,7 +121,7 @@ export function UploadMemoryDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger
         render={
           <Button

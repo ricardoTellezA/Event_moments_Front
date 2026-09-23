@@ -5,13 +5,18 @@ import { CheckCircle2Icon, XIcon } from "lucide-react";
 
 import { ScrollReveal } from "@/components/shared/scroll-reveal/scroll-reveal";
 import { Button } from "@/components/ui/button";
+import type { AlbumMemory } from "@/features/albums/types/album.types";
 
 export function PublicUploadSuccessCard({
   count,
+  memories,
   onDismiss,
+  onUploadMore,
 }: {
   count: number;
+  memories: AlbumMemory[];
   onDismiss: () => void;
+  onUploadMore: () => void;
 }) {
   const [isLeaving, setIsLeaving] = useState(false);
 
@@ -22,10 +27,10 @@ export function PublicUploadSuccessCard({
 
     const leaveTimer = window.setTimeout(() => {
       setIsLeaving(true);
-    }, 4200);
+    }, 6500);
     const dismissTimer = window.setTimeout(() => {
       onDismiss();
-    }, 4700);
+    }, 7000);
 
     return () => {
       window.clearTimeout(leaveTimer);
@@ -60,6 +65,36 @@ export function PublicUploadSuccessCard({
               : `${count} fotos quedaron guardadas y pueden pasar por revision antes de aparecer.`}
           </p>
         </div>
+      </div>
+      {memories.length > 0 ? (
+        <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+          {memories.slice(0, 6).map((memory) => (
+            <div
+              key={memory.id}
+              className="relative size-16 shrink-0 overflow-hidden rounded-2xl bg-muted shadow-soft"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={memory.src}
+                alt={memory.alt}
+                className="size-full object-cover"
+              />
+            </div>
+          ))}
+          {memories.length > 6 ? (
+            <div className="grid size-16 shrink-0 place-items-center rounded-2xl bg-muted text-sm font-semibold text-muted-foreground">
+              +{memories.length - 6}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Button type="button" className="bg-afterglow" onClick={onUploadMore}>
+          Subir mas
+        </Button>
+        <Button type="button" variant="outline" onClick={onDismiss}>
+          Ver album
+        </Button>
       </div>
       <Button
         type="button"

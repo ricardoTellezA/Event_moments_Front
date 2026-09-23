@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { LockIcon } from "lucide-react";
 
@@ -19,6 +20,7 @@ import { PublicUploadSuccessCard } from "@/features/albums/components/public-upl
 import { usePublicAlbumController } from "@/features/albums/hooks/use-public-album-controller";
 
 export function PublicAlbumScreen({ id }: { id: string }) {
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const albumController = usePublicAlbumController(id);
   const {
     album,
@@ -35,6 +37,7 @@ export function PublicAlbumScreen({ id }: { id: string }) {
     uploadOpen,
     uploadSuccessCount,
     uploadSuccessId,
+    uploadSuccessMemories,
     dismissUploadSuccess,
     handleDownload,
     handleUnlockPin,
@@ -96,13 +99,20 @@ export function PublicAlbumScreen({ id }: { id: string }) {
           downloading={downloading}
           uploadMsLabel={uploadMsLabel}
           remainingRoll={remainingRoll}
+          uploadDialogOpen={uploadDialogOpen}
           onUpload={handleUpload}
+          onUploadDialogOpenChange={setUploadDialogOpen}
           onDownload={handleDownload}
         />
         <PublicUploadSuccessCard
           key={uploadSuccessId}
           count={uploadSuccessCount}
+          memories={uploadSuccessMemories}
           onDismiss={dismissUploadSuccess}
+          onUploadMore={() => {
+            dismissUploadSuccess();
+            setUploadDialogOpen(true);
+          }}
         />
         {album.frozen ? <FrozenAlbumCard album={album} /> : null}
         {revealPending ? (

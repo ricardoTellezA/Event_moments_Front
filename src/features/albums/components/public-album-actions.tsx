@@ -15,7 +15,9 @@ export function PublicAlbumActions({
   downloading,
   uploadMsLabel,
   remainingRoll,
+  uploadDialogOpen,
   onUpload,
+  onUploadDialogOpenChange,
   onDownload,
 }: {
   albumId: string;
@@ -25,11 +27,13 @@ export function PublicAlbumActions({
   downloading: boolean;
   uploadMsLabel?: string;
   remainingRoll: number;
+  uploadDialogOpen?: boolean;
   onUpload: (
     guest: string,
     files: File[],
     onProgress?: (progress: number) => void,
   ) => Promise<void>;
+  onUploadDialogOpenChange?: (open: boolean) => void;
   onDownload: () => void;
 }) {
   return (
@@ -38,6 +42,8 @@ export function PublicAlbumActions({
         albumId={albumId}
         disabled={!canUpload || remainingRoll <= 0}
         maxFiles={Number.isFinite(remainingRoll) ? Math.min(12, remainingRoll) : 12}
+        open={uploadDialogOpen}
+        onOpenChange={onUploadDialogOpenChange}
         onUpload={onUpload}
       />
       {canManage && canDownload ? (

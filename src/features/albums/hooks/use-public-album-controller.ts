@@ -11,7 +11,6 @@ import {
   recordEventView,
   unlockEventPin,
   uploadEventPhotos,
-  type UploadedApiPhoto,
 } from "@/features/albums/api/albums.api";
 import {
   addGuestRollCount,
@@ -23,7 +22,7 @@ import {
   getUploadMsLeft,
 } from "@/features/albums/lib/albums-store";
 import { mapUploadedPhotoToMemory } from "@/features/albums/lib/photo-mappers";
-import type { EventAlbum } from "@/features/albums/types/album.types";
+import type { AlbumMemory, EventAlbum } from "@/features/albums/types/album.types";
 
 export function usePublicAlbumController(id: string) {
   const { getToken, isSignedIn } = useAuth();
@@ -37,6 +36,7 @@ export function usePublicAlbumController(id: string) {
   const [downloading, setDownloading] = useState(false);
   const [uploadSuccessCount, setUploadSuccessCount] = useState(0);
   const [uploadSuccessId, setUploadSuccessId] = useState(0);
+  const [uploadSuccessMemories, setUploadSuccessMemories] = useState<AlbumMemory[]>([]);
 
   const loadAlbum = useCallback(async (mounted = true) => {
     try {
@@ -142,6 +142,7 @@ export function usePublicAlbumController(id: string) {
     }
 
     setUploadSuccessCount(0);
+    setUploadSuccessMemories([]);
 
     const uploadedPhotos = await uploadEventPhotos({
       slug: album.id,
@@ -150,33 +151,34 @@ export function usePublicAlbumController(id: string) {
       files,
       onProgress,
     });
+    const uploadedMemories = uploadedPhotos.map((photo) =>
+      mapUploadedPhotoToMemory(photo, album.name),
+    );
 
     addGuestRollCount(album.id, uploadedPhotos.length);
     setRollUsed((current) => current + uploadedPhotos.length);
-    appendUploadedPhotos(uploadedPhotos);
+    appendUploadedPhotos(uploadedMemories);
     setUploadSuccessCount(uploadedPhotos.length);
+    setUploadSuccessMemories(uploadedMemories);
     setUploadSuccessId((current) => current + 1);
     void loadAlbum();
   };
 
-  const appendUploadedPhotos = (uploadedPhotos: UploadedApiPhoto[]) => {
+  const appendUploadedPhotos = (uploadedMemories: AlbumMemory[]) => {
     setAlbum((current) => {
       if (!current) {
         return current;
       }
 
       const existingGuests = new Set(current.photos.map((photo) => photo.guest));
-      const newMemories = uploadedPhotos.map((photo) =>
-        mapUploadedPhotoToMemory(photo, current.name),
-      );
-      const newGuestCount = newMemories.some((photo) => !existingGuests.has(photo.guest))
+      const newGuestCount = uploadedMemories.some((photo) => !existingGuests.has(photo.guest))
         ? 1
         : 0;
 
       return {
         ...current,
-        photos: [...newMemories, ...current.photos],
-        photosCount: current.photosCount + uploadedPhotos.length,
+        photos: [...uploadedMemories, ...current.photos],
+        photosCount: current.photosCount + uploadedMemories.length,
         contributors: current.contributors + newGuestCount,
       };
     });
@@ -248,11 +250,15 @@ export function usePublicAlbumController(id: string) {
     uploadOpen,
     uploadSuccessCount,
     uploadSuccessId,
+    uploadSuccessMemories,
     handleDownload,
     handleUnlockPin,
     handleUpload,
     handleVote,
-    dismissUploadSuccess: () => setUploadSuccessCount(0),
+    dismissUploadSuccess: () => {
+      setUploadSuccessCount(0);
+      setUploadSuccessMemories([]);
+    },
     setForceReveal,
     setPin,
   };
