@@ -85,13 +85,22 @@ export function MyAlbumsScreen() {
                   className="group block overflow-hidden rounded-3xl border border-border bg-card shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lifted"
                 >
                   <div className="relative h-40 overflow-hidden">
-                    <Image
-                      src={album.cover}
-                      alt={`Portada de ${album.name}`}
-                      width={720}
-                      height={420}
-                      className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
+                    {album.cover.includes("/api/v1/events/") ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={album.cover}
+                        alt={`Portada de ${album.name}`}
+                        className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <Image
+                        src={album.cover}
+                        alt={`Portada de ${album.name}`}
+                        width={720}
+                        height={420}
+                        className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    )}
                     <AlbumStatusLabel
                       status={getAlbumStatus(album)}
                       className="absolute left-3 top-3"

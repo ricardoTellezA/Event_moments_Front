@@ -12,16 +12,27 @@ export function PublicAlbumHero({
   album: EventAlbum;
   status: AlbumStatus;
 }) {
+  const usesApiCover = album.cover.includes("/api/v1/events/");
+
   return (
     <header className="relative h-[42vh] min-h-72 overflow-hidden">
-      <Image
-        src={album.cover}
-        alt={`Portada de ${album.name}`}
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover"
-      />
+      {usesApiCover ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={album.cover}
+          alt={`Portada de ${album.name}`}
+          className="absolute inset-0 size-full object-cover"
+        />
+      ) : (
+        <Image
+          src={album.cover}
+          alt={`Portada de ${album.name}`}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-6xl px-5 pb-8">
         <AlbumStatusLabel status={status} />
