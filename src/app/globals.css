@@ -292,6 +292,33 @@
     break-after: page;
     page-break-after: always;
     overflow: hidden;
+    box-shadow: none !important;
+    filter: none !important;
+    transform: none !important;
+    contain: layout paint;
+  }
+
+  .memory-book-page *,
+  .memory-book-page *::before,
+  .memory-book-page *::after {
+    animation: none !important;
+    transition: none !important;
+    filter: none !important;
+    text-shadow: none !important;
+  }
+
+  .memory-book-page :is([class*="shadow-"]) {
+    box-shadow: none !important;
+  }
+
+  .memory-book-page > .absolute.inset-0 {
+    opacity: 0.65;
+  }
+
+  .memory-book-page img {
+    box-shadow: none !important;
+    transform: none !important;
+    backface-visibility: hidden;
   }
 
   .memory-book-page:last-child {
