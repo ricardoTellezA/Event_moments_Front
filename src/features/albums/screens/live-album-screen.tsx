@@ -126,13 +126,13 @@ export function LiveAlbumScreen({ id }: { id: string }) {
         alt=""
         className="absolute inset-0 h-full w-full scale-110 object-cover opacity-30 blur-3xl"
       />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),rgba(9,9,11,0.9)_60%,rgba(9,9,11,0.98))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),rgba(9,9,11,0.86)_58%,rgba(9,9,11,0.98))]" />
 
       <div className="relative z-10 flex min-h-screen flex-col px-4 py-4 sm:px-6">
         <LiveTopBar albumId={album.id} albumName={album.name} shareUrl={shareUrl} />
 
-        <section className="grid flex-1 place-items-center py-4">
-          <div className="relative flex h-[72vh] w-full max-w-6xl items-center justify-center">
+        <section className="grid flex-1 place-items-center py-6">
+          <div className="relative flex h-[68vh] w-full max-w-6xl items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               key={activePhoto.id}
@@ -143,15 +143,15 @@ export function LiveAlbumScreen({ id }: { id: string }) {
           </div>
         </section>
 
-        <div className="flex flex-wrap items-end justify-between gap-4 pb-2">
-          <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-white/55">
+        <div className="mb-3 flex flex-wrap items-end justify-between gap-4 rounded-[1.75rem] border border-white/12 bg-zinc-950/62 px-5 py-4 shadow-[0_20px_70px_rgba(0,0,0,0.42)] backdrop-blur-xl">
+          <div className="min-w-0">
+            <p className="text-xs font-medium uppercase tracking-[0.24em] text-white/62">
               Recuerdo {safeIndex + 1} de {photos.length}
             </p>
-            <h2 className="mt-2 font-heading text-3xl font-semibold sm:text-5xl">
+            <h2 className="mt-2 truncate font-heading text-3xl font-medium leading-none text-white sm:text-4xl">
               {activePhoto.guest}
             </h2>
-            <p className="mt-1 text-sm text-white/60">
+            <p className="mt-2 text-sm font-normal text-white/68">
               {new Date(activePhoto.takenAt).toLocaleString("es-MX", {
                 day: "numeric",
                 hour: "2-digit",
@@ -161,11 +161,12 @@ export function LiveAlbumScreen({ id }: { id: string }) {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/10 p-2 backdrop-blur">
+          <div className="flex items-center gap-2 rounded-full border border-white/12 bg-white/10 p-2 text-white shadow-soft backdrop-blur">
             <Button
               aria-label="Foto anterior"
               size="icon"
               variant="ghost"
+              className="text-white/75 hover:bg-white/12 hover:text-white"
               onClick={goToPrevious}
             >
               <ChevronLeftIcon />
@@ -182,6 +183,7 @@ export function LiveAlbumScreen({ id }: { id: string }) {
               aria-label="Siguiente foto"
               size="icon"
               variant="ghost"
+              className="text-white/75 hover:bg-white/12 hover:text-white"
               onClick={goToNext}
             >
               <ChevronRightIcon />
@@ -190,6 +192,7 @@ export function LiveAlbumScreen({ id }: { id: string }) {
               aria-label="Pantalla completa"
               size="icon"
               variant="ghost"
+              className="text-white/75 hover:bg-white/12 hover:text-white"
               onClick={toggleFullscreen}
             >
               <Maximize2Icon />
@@ -211,10 +214,11 @@ function LiveTopBar({
   shareUrl: string;
 }) {
   return (
-    <header className="flex flex-wrap items-center justify-between gap-3">
+    <header className="flex flex-wrap items-center justify-between gap-3 rounded-full border border-white/10 bg-zinc-950/58 px-3 py-2 text-white shadow-[0_16px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"
+          className="text-white/62 hover:bg-white/10 hover:text-white"
           nativeButton={false}
           render={<Link href={`/a/${albumId}/administrar`} />}
         >
@@ -222,20 +226,24 @@ function LiveTopBar({
           Panel
         </Button>
         <div className="hidden items-center gap-3 sm:flex">
-          <AppLogo />
+          <AppLogo className="text-white" />
           <div>
-            <p className="text-xs uppercase tracking-[0.24em] text-white/45">
+            <p className="text-xs font-medium uppercase tracking-[0.24em] text-white/55">
               Pantalla en vivo
             </p>
-            <h1 className="font-heading text-2xl font-semibold">{albumName}</h1>
+            <h1 className="font-heading text-2xl font-medium leading-none text-white">
+              {albumName}
+            </h1>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/75 backdrop-blur">
+      <div className="flex min-w-0 items-center gap-3 rounded-full border border-white/12 bg-white/10 px-4 py-2 text-sm text-white/78 backdrop-blur">
         <span className="h-2 w-2 rounded-full bg-emerald-300" />
-        <span className="hidden sm:inline">Sube tus recuerdos:</span>
-        <span className="font-medium text-white">{shareUrl.replace(/^https?:\/\//, "")}</span>
+        <span className="hidden font-normal sm:inline">Sube tus recuerdos</span>
+        <span className="max-w-[56vw] truncate font-medium text-white">
+          {shareUrl.replace(/^https?:\/\//, "")}
+        </span>
       </div>
     </header>
   );
