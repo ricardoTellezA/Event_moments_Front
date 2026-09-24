@@ -50,11 +50,13 @@ export function CreateAlbumScreen() {
               privacy={form.privacy}
               pin={form.pin}
               duration={form.duration}
+              coverPreviewUrl={form.coverPreviewUrl}
               onNameChange={form.setName}
               onDateChange={form.setDate}
               onPrivacyChange={form.setPrivacy}
               onPinChange={form.setPin}
               onDurationChange={form.setDuration}
+              onCoverChange={form.setCover}
             />
           ) : null}
           {form.step === 1 ? (

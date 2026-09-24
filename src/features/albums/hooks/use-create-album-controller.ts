@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import { toast } from "sonner";
 
-import { createEvent } from "@/features/albums/api/albums.api";
+import { createEvent, uploadEventCover } from "@/features/albums/api/albums.api";
 import { getCoverForEventName } from "@/features/albums/data/albums.data";
+import { compressImageFile } from "@/features/albums/lib/image-compression";
 
 export function useCreateAlbumController() {
   const router = useRouter();
@@ -27,7 +28,22 @@ export function useCreateAlbumController() {
   const [allowVoice, setAllowVoice] = useState(false);
   const [bestOfOn, setBestOfOn] = useState(true);
   const [allowDownload, setAllowDownload] = useState(true);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (coverPreviewUrl) {
+        URL.revokeObjectURL(coverPreviewUrl);
+      }
+    };
+  }, [coverPreviewUrl]);
+
+  const setCover = (file: File | null) => {
+    setCoverFile(file);
+    setCoverPreviewUrl(file ? URL.createObjectURL(file) : null);
+  };
 
   const goToStep = (nextStep: number) => {
     setDirection(nextStep > step ? "forward" : "back");
@@ -52,10 +68,11 @@ export function useCreateAlbumController() {
     try {
       setIsCreating(true);
       const token = await getToken();
+      const fallbackCoverUrl = getCoverForEventName(name);
       const album = await createEvent(
         {
           name,
-          coverUrl: getCoverForEventName(name),
+          coverUrl: fallbackCoverUrl,
           eventDate: date ? new Date(date).toISOString() : undefined,
           durationHours: Number(duration),
           privacy: privacy === "pin" ? "pin" : "public",
@@ -75,6 +92,22 @@ export function useCreateAlbumController() {
         token,
       );
 
+      if (coverFile) {
+        try {
+          const compressedCover = await compressImageFile(coverFile, {
+            maxFileSize: 2.5 * 1024 * 1024,
+            maxImageSide: 2200,
+            qualities: [0.9, 0.82, 0.74, 0.66],
+          });
+
+          await uploadEventCover(album.dbId ?? album.id, compressedCover, token);
+        } catch {
+          toast.warning(
+            "Album creado, pero no pudimos guardar la portada personalizada",
+          );
+        }
+      }
+
       toast.success("Album creado");
       router.push(`/a/${album.id}`);
     } catch {
@@ -89,6 +122,8 @@ export function useCreateAlbumController() {
     allowVoice,
     bestOfOn,
     challengesOn,
+    coverFile,
+    coverPreviewUrl,
     date,
     direction,
     disposableOn,
@@ -108,6 +143,7 @@ export function useCreateAlbumController() {
     setAllowVoice,
     setBestOfOn,
     setChallengesOn,
+    setCover,
     setDate,
     setDisposableOn,
     setDuration,

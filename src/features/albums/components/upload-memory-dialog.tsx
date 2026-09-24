@@ -17,9 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Progress, ProgressLabel } from "@/components/ui/progress";
 import { ApiError } from "@/lib/api/client";
-
-const maxFileSize = 4 * 1024 * 1024;
-const maxImageSide = 2400;
+import { compressImageFile } from "@/features/albums/lib/image-compression";
 
 type SelectedMemory = {
   id: string;
@@ -90,7 +88,7 @@ export function UploadMemoryDialog({
       const compressedFiles: File[] = [];
 
       for (const [index, file] of files.entries()) {
-        compressedFiles.push(await compressImage(file));
+        compressedFiles.push(await compressImageFile(file));
         setProgress(Math.round(((index + 1) / files.length) * 70));
       }
 
@@ -284,59 +282,6 @@ function getUploadErrorCodeMessage(code?: string) {
   };
 
   return messages[code ?? ""] ?? "No pudimos subir las fotos";
-}
-
-async function compressImage(file: File) {
-  const image = document.createElement("img");
-  const url = URL.createObjectURL(file);
-
-  try {
-    image.src = url;
-    await image.decode();
-
-    const scale = Math.min(1, maxImageSide / Math.max(image.width, image.height));
-    const width = Math.max(1, Math.round(image.width * scale));
-    const height = Math.max(1, Math.round(image.height * scale));
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    canvas.getContext("2d")?.drawImage(image, 0, 0, width, height);
-
-    for (const quality of [0.9, 0.82, 0.74]) {
-      const blob = await canvasToBlob(canvas, quality);
-
-      if (blob.size <= maxFileSize) {
-        return new File([blob], replaceExtension(file.name), {
-          type: "image/jpeg",
-        });
-      }
-    }
-
-    throw new Error("IMAGE_TOO_LARGE");
-  } finally {
-    URL.revokeObjectURL(url);
-  }
-}
-
-function canvasToBlob(canvas: HTMLCanvasElement, quality: number) {
-  return new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        if (blob) {
-          resolve(blob);
-          return;
-        }
-
-        reject(new Error("Image compression failed"));
-      },
-      "image/jpeg",
-      quality,
-    );
-  });
-}
-
-function replaceExtension(fileName: string) {
-  return fileName.replace(/\.[^.]+$/, "") + ".jpg";
 }
 
 function getGuestNameStorageKey(albumId: string) {

@@ -135,6 +135,24 @@ export async function createEvent(input: CreateEventInput, token: string | null)
   return mapApiEventToAlbum(event);
 }
 
+export async function uploadEventCover(
+  idOrSlug: string,
+  file: File,
+  token: string | null,
+) {
+  const formData = new FormData();
+  formData.set("file", file);
+
+  return apiFetch<{ id: string; slug: string; coverUrl: string | null }>(
+    `/events/${idOrSlug}/cover`,
+    {
+      method: "PATCH",
+      token,
+      body: formData,
+    },
+  );
+}
+
 export async function getMyEvents(token: string | null) {
   const events = await apiFetch<ApiEvent[]>("/events/me", { token });
 

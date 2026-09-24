@@ -1,5 +1,9 @@
 "use client";
 
+import { ImagePlusIcon, Trash2Icon } from "lucide-react";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, Pill, ToggleRow } from "@/features/albums/components/create-album-fields";
 
@@ -16,25 +20,87 @@ export function BasicAlbumStep({
   privacy,
   pin,
   duration,
+  coverPreviewUrl,
   onNameChange,
   onDateChange,
   onPrivacyChange,
   onPinChange,
   onDurationChange,
+  onCoverChange,
 }: {
   name: string;
   date: string;
   privacy: string;
   pin: string;
   duration: string;
+  coverPreviewUrl: string | null;
   onNameChange: (value: string) => void;
   onDateChange: (value: string) => void;
   onPrivacyChange: (value: string) => void;
   onPinChange: (value: string) => void;
   onDurationChange: (value: string) => void;
+  onCoverChange: (file: File | null) => void;
 }) {
   return (
     <>
+      <Field label="Foto de portada">
+        <div className="overflow-hidden rounded-3xl border border-border bg-muted/40">
+          {coverPreviewUrl ? (
+            <div className="relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={coverPreviewUrl}
+                alt="Vista previa de portada"
+                className="aspect-[16/9] w-full object-cover"
+              />
+              <Button
+                type="button"
+                size="icon"
+                variant="secondary"
+                className="absolute right-3 top-3 rounded-full bg-card/95 shadow-soft"
+                onClick={() => onCoverChange(null)}
+                aria-label="Quitar portada"
+              >
+                <Trash2Icon />
+              </Button>
+            </div>
+          ) : (
+            <label className="flex aspect-[16/9] cursor-pointer flex-col items-center justify-center gap-3 px-6 text-center transition-colors hover:bg-muted">
+              <span className="grid size-12 place-items-center rounded-full bg-card text-primary shadow-soft">
+                <ImagePlusIcon className="size-5" />
+              </span>
+              <span>
+                <span className="block text-sm font-semibold">
+                  Sube una foto para presentar el evento
+                </span>
+                <span className="mt-1 block text-xs text-muted-foreground">
+                  Se optimiza antes de guardarla. Recomendado horizontal.
+                </span>
+              </span>
+              <Input
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                onChange={(event) => {
+                  const file = event.target.files?.[0] ?? null;
+
+                  if (!file) {
+                    return;
+                  }
+
+                  if (!file.type.startsWith("image/")) {
+                    toast.error("Selecciona una imagen valida");
+                    return;
+                  }
+
+                  onCoverChange(file);
+                  event.target.value = "";
+                }}
+              />
+            </label>
+          )}
+        </div>
+      </Field>
       <Field label="Nombre del evento">
         <Input
           value={name}
