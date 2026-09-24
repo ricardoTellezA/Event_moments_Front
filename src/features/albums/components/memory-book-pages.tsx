@@ -18,7 +18,7 @@ export function MemoryBookPages({
   spreads,
 }: MemoryBookPagesProps) {
   return (
-    <div className="memory-book-pages mx-auto max-w-5xl space-y-8 print:mx-0 print:max-w-none print:space-y-0">
+    <div className="memory-book-pages mx-auto max-w-5xl space-y-6 sm:space-y-8 print:mx-0 print:max-w-none print:space-y-0">
       <MemoryBookCover
         album={album}
         photosCount={photosCount}
@@ -44,55 +44,57 @@ function MemoryBookCover({
   const previewPhotos = album.photos.slice(0, 4);
 
   return (
-    <section className="memory-book-page memory-book-cover relative overflow-hidden rounded-[2rem] border border-[#d6c8b8] bg-[#f5efe6] text-[#1f1b18] shadow-lifted print:rounded-none print:border-0 print:shadow-none">
+    <section className="memory-book-page memory-book-cover relative overflow-hidden rounded-[1.5rem] border border-[#d6c8b8] bg-[#f5efe6] text-[#1f1b18] shadow-lifted sm:rounded-[2rem] print:rounded-none print:border-0 print:shadow-none">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,0.95),transparent_28%),radial-gradient(circle_at_92%_18%,rgba(201,178,151,0.28),transparent_24%),linear-gradient(135deg,#fbf7ef,#e8dccd)]" />
-      <div className="absolute inset-x-8 top-8 h-px bg-[#1f1b18]/18" />
-      <div className="relative flex min-h-[760px] flex-col p-8 print:min-h-0 print:p-10">
+      <div className="absolute inset-x-5 top-6 h-px bg-[#1f1b18]/18 sm:inset-x-8 sm:top-8" />
+      <div className="relative flex min-h-0 flex-col p-5 sm:min-h-[760px] sm:p-8 print:min-h-0 print:p-10">
         <div className="flex items-start justify-between gap-4">
           <div className="inline-flex items-center gap-3">
-            <span className="grid size-11 place-items-center rounded-full bg-[#1f1b18] text-[#f5efe6] shadow-soft">
-              <SparklesIcon className="size-5" />
+            <span className="grid size-9 place-items-center rounded-full bg-[#1f1b18] text-[#f5efe6] shadow-soft sm:size-11">
+              <SparklesIcon className="size-4 sm:size-5" />
             </span>
             <span className="text-sm font-semibold tracking-wide">Keeps</span>
           </div>
-          <p className="text-right text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#1f1b18]/62">
+          <p className="max-w-28 text-right text-[0.55rem] font-semibold uppercase tracking-[0.24em] text-[#1f1b18]/62 sm:max-w-none sm:text-[0.65rem] sm:tracking-[0.32em]">
             Digital memory book
           </p>
         </div>
 
-        <div className="mt-10 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.42em] text-[#1f1b18]/64">
+        <div className="mt-8 text-center sm:mt-10">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#1f1b18]/64 sm:text-xs sm:tracking-[0.42em]">
             {formatBookDate(album.date)}
           </p>
-          <h1 className="mx-auto mt-4 max-w-3xl font-heading text-5xl font-medium uppercase leading-[0.96] tracking-[0.12em] sm:text-6xl print:text-6xl">
+          <h1 className="mx-auto mt-4 max-w-3xl font-heading text-[clamp(2.35rem,12vw,4rem)] font-medium uppercase leading-[0.98] tracking-[0.08em] [overflow-wrap:anywhere] sm:text-6xl sm:tracking-[0.12em] print:text-6xl">
             {album.name}
           </h1>
-          <div className="mx-auto mt-5 h-px w-52 bg-[#1f1b18]/28" />
-          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#1f1b18]/72">
+          <div className="mx-auto mt-4 h-px w-36 bg-[#1f1b18]/28 sm:mt-5 sm:w-52" />
+          <p className="mt-4 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#1f1b18]/72 sm:text-xs sm:tracking-[0.3em]">
             {photosCount} recuerdos | {contributors} invitados | Album completo
           </p>
         </div>
 
-        <div className="mt-10 grid flex-1 items-end gap-6 lg:grid-cols-[0.82fr_1.18fr] print:grid-cols-[0.82fr_1.18fr]">
-          <div className="relative mx-auto w-full max-w-xs">
-            <div className="rounded-[1.6rem] bg-white p-3 shadow-[0_24px_60px_rgba(53,39,25,0.2)]">
+        <div className="mt-8 grid flex-1 items-end gap-5 sm:mt-10 sm:gap-6 lg:grid-cols-[0.82fr_1.18fr] print:grid-cols-[0.82fr_1.18fr]">
+          <div className="relative mx-auto w-full max-w-[14rem] sm:max-w-xs">
+            <div className="rounded-[1.35rem] bg-white p-2.5 shadow-[0_24px_60px_rgba(53,39,25,0.2)] sm:rounded-[1.6rem] sm:p-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={album.cover}
                 alt=""
-                className="aspect-[4/5] w-full rounded-[1.1rem] object-cover"
+                className="aspect-[4/5] w-full rounded-[1rem] object-cover sm:rounded-[1.1rem]"
               />
-              <div className="px-2 py-4 text-center">
+              <div className="px-2 py-3 text-center sm:py-4">
                 <p className="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-[#1f1b18]/58">
                   Evento
                 </p>
-                <p className="mt-1 font-heading text-xl font-medium">{album.name}</p>
+                <p className="mt-1 truncate font-heading text-lg font-medium sm:text-xl">
+                  {album.name}
+                </p>
               </div>
             </div>
           </div>
 
           <div className="relative">
-            <div className="rounded-[1.8rem] bg-white p-4 shadow-[0_28px_70px_rgba(53,39,25,0.22)]">
+            <div className="rounded-[1.35rem] bg-white p-3 shadow-[0_28px_70px_rgba(53,39,25,0.22)] sm:rounded-[1.8rem] sm:p-4">
               <div className="grid gap-3 sm:grid-cols-2">
                 {getCoverPreviewPhotos(previewPhotos, album).map((photo, index) => (
                   <figure
@@ -113,7 +115,7 @@ function MemoryBookCover({
                 ))}
               </div>
             </div>
-            <div className="absolute -right-4 top-8 max-w-60 rounded-full bg-[#d8c3ad]/88 px-6 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#1f1b18]/74 shadow-soft print:right-2">
+            <div className="mt-3 max-w-full rounded-full bg-[#d8c3ad]/88 px-4 py-2 text-center text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[#1f1b18]/74 shadow-soft sm:absolute sm:-right-4 sm:top-8 sm:mt-0 sm:max-w-60 sm:px-6 sm:py-3 sm:text-xs sm:tracking-[0.22em] print:right-2">
               Listo para imprimir o guardar en PDF
             </div>
           </div>
@@ -134,18 +136,18 @@ function MemoryBookSpreadPage({
   const gridPhotos = spread.photos.slice(1, 7);
 
   return (
-    <section className="memory-book-page relative overflow-hidden rounded-[2rem] border border-[#d6c8b8] bg-[#faf6ee] p-8 text-[#1f1b18] shadow-lifted print:rounded-none print:border-0 print:shadow-none">
+    <section className="memory-book-page relative overflow-hidden rounded-[1.5rem] border border-[#d6c8b8] bg-[#faf6ee] p-5 text-[#1f1b18] shadow-lifted sm:rounded-[2rem] sm:p-8 print:rounded-none print:border-0 print:shadow-none">
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(31,27,24,0.08)_0,transparent_8%,transparent_92%,rgba(31,27,24,0.06)_100%)]" />
-      <div className="relative grid h-full gap-7 lg:grid-cols-[0.78fr_1.22fr] print:grid-cols-[0.78fr_1.22fr]">
-        <div className="flex flex-col justify-between border-r border-[#1f1b18]/12 pr-6 print:pr-6">
+      <div className="relative grid h-full gap-6 lg:grid-cols-[0.78fr_1.22fr] lg:gap-7 print:grid-cols-[0.78fr_1.22fr]">
+        <div className="flex flex-col justify-between border-b border-[#1f1b18]/12 pb-5 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6 print:border-b-0 print:border-r print:pr-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#8f7256]">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-[#8f7256] sm:text-xs sm:tracking-[0.34em]">
               Capitulo {String(index + 1).padStart(2, "0")}
             </p>
-            <h2 className="mt-5 font-heading text-5xl font-medium leading-[0.98] tracking-wide">
+            <h2 className="mt-4 font-heading text-[clamp(2rem,10vw,3.5rem)] font-medium leading-[0.98] tracking-wide [overflow-wrap:anywhere] sm:mt-5">
               {spread.title}
             </h2>
-            <p className="mt-5 max-w-sm text-base leading-7 text-[#1f1b18]/62">
+            <p className="mt-4 max-w-sm text-sm leading-6 text-[#1f1b18]/62 sm:mt-5 sm:text-base sm:leading-7">
               {spread.subtitle}
             </p>
           </div>
@@ -153,11 +155,11 @@ function MemoryBookSpreadPage({
             <PhotoCredit guest={heroPhoto.guest} index={1} className="mt-8" />
           ) : null}
         </div>
-        <div className="grid min-h-[620px] grid-rows-[1.05fr_0.95fr] gap-5 print:min-h-0">
+        <div className="grid min-h-0 gap-4 sm:gap-5 lg:min-h-[620px] lg:grid-rows-[1.05fr_0.95fr] print:min-h-0">
           {heroPhoto ? (
             <BookPhoto photo={heroPhoto} featured />
           ) : null}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
             {gridPhotos.map((photo, photoIndex) => (
               <BookPhoto
                 key={photo.id}
@@ -185,15 +187,15 @@ function BookPhoto({
 }) {
   return (
     <figure
-      className={`relative min-h-36 overflow-hidden rounded-[1.35rem] bg-white p-2 shadow-[0_18px_42px_rgba(53,39,25,0.16)] ${className ?? ""}`}
+      className={`relative min-h-0 overflow-hidden rounded-[1.1rem] bg-white p-2 shadow-[0_18px_42px_rgba(53,39,25,0.16)] sm:rounded-[1.35rem] ${className ?? ""}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={photo.originalSrc ?? photo.src}
         alt={photo.alt}
-        className={`size-full rounded-[1rem] object-cover ${featured ? "aspect-[16/9]" : "aspect-square"}`}
+        className={`w-full rounded-[0.85rem] object-cover sm:rounded-[1rem] ${featured ? "aspect-[16/9]" : "aspect-square"}`}
       />
-      <figcaption className="px-2 pt-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#1f1b18]/52">
+      <figcaption className="truncate px-1.5 pt-2 text-[0.58rem] font-semibold uppercase tracking-[0.1em] text-[#1f1b18]/52 sm:px-2 sm:text-[0.65rem] sm:tracking-[0.14em]">
         {photo.guest}
       </figcaption>
     </figure>
@@ -225,23 +227,23 @@ function MemoryBookClosingPage({
   photosCount: number;
 }) {
   return (
-    <section className="memory-book-page relative flex flex-col justify-between overflow-hidden rounded-[2rem] border border-[#d6c8b8] bg-[#f5efe6] p-10 text-[#1f1b18] shadow-lifted print:rounded-none print:border-0 print:shadow-none">
+    <section className="memory-book-page relative flex flex-col justify-between gap-10 overflow-hidden rounded-[1.5rem] border border-[#d6c8b8] bg-[#f5efe6] p-6 text-[#1f1b18] shadow-lifted sm:rounded-[2rem] sm:p-10 print:rounded-none print:border-0 print:shadow-none">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_20%,rgba(216,195,173,0.48),transparent_24%),linear-gradient(135deg,#fffaf1,#eadfce)]" />
       <div className="relative">
-        <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#8f7256]">
+        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-[#8f7256] sm:text-xs sm:tracking-[0.34em]">
           Keeps
         </p>
-        <h2 className="mt-5 max-w-3xl font-heading text-6xl font-medium uppercase leading-[0.96] tracking-[0.08em]">
+        <h2 className="mt-5 max-w-3xl font-heading text-[clamp(2.55rem,13vw,4rem)] font-medium uppercase leading-[0.98] tracking-[0.04em] [overflow-wrap:anywhere] sm:text-6xl sm:leading-[0.96] sm:tracking-[0.08em]">
           Gracias por compartir este recuerdo.
         </h2>
       </div>
       <div className="relative grid gap-6 sm:grid-cols-[1fr_280px] sm:items-end">
-        <p className="max-w-xl text-base leading-8 text-[#1f1b18]/64">
+        <p className="max-w-xl text-sm leading-7 text-[#1f1b18]/64 sm:text-base sm:leading-8">
           {album.name} queda guardado con {photosCount} recuerdos compartidos por sus
           invitados. Cada foto forma parte de una historia hecha entre todos.
         </p>
         <div className="rounded-3xl border border-[#d8cbbb] bg-white/72 p-5 shadow-soft">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8f7256]">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[#8f7256] sm:text-xs sm:tracking-[0.24em]">
             Album original
           </p>
           <p className="mt-3 break-all text-sm leading-6 text-[#1f1b18]/62">
