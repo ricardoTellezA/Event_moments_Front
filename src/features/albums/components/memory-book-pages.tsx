@@ -1,4 +1,4 @@
-import { CameraIcon, HeartIcon, SparklesIcon, UsersIcon } from "lucide-react";
+import { SparklesIcon } from "lucide-react";
 
 import type { MemoryBookSpread } from "@/features/albums/lib/memory-book";
 import { formatBookDate } from "@/features/albums/lib/memory-book";
@@ -41,64 +41,85 @@ function MemoryBookCover({
   photosCount: number;
   contributors: number;
 }) {
+  const previewPhotos = album.photos.slice(0, 4);
+
   return (
-    <section className="memory-book-page memory-book-cover relative overflow-hidden rounded-[2rem] border border-border bg-foreground text-background shadow-lifted print:rounded-none print:border-0 print:shadow-none">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={album.cover}
-        alt=""
-        className="absolute inset-0 size-full object-cover opacity-45"
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-foreground/90 via-foreground/60 to-foreground/20" />
-      <div className="relative flex min-h-[760px] flex-col justify-between p-10 print:min-h-0 print:p-12">
-        <div className="flex items-center justify-between gap-4">
+    <section className="memory-book-page memory-book-cover relative overflow-hidden rounded-[2rem] border border-[#d6c8b8] bg-[#f5efe6] text-[#1f1b18] shadow-lifted print:rounded-none print:border-0 print:shadow-none">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,0.95),transparent_28%),radial-gradient(circle_at_92%_18%,rgba(201,178,151,0.28),transparent_24%),linear-gradient(135deg,#fbf7ef,#e8dccd)]" />
+      <div className="absolute inset-x-8 top-8 h-px bg-[#1f1b18]/18" />
+      <div className="relative flex min-h-[760px] flex-col p-8 print:min-h-0 print:p-10">
+        <div className="flex items-start justify-between gap-4">
           <div className="inline-flex items-center gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-afterglow text-primary-foreground shadow-soft">
+            <span className="grid size-11 place-items-center rounded-full bg-[#1f1b18] text-[#f5efe6] shadow-soft">
               <SparklesIcon className="size-5" />
             </span>
-            <span className="text-label text-background">Keeps</span>
+            <span className="text-sm font-semibold tracking-wide">Keeps</span>
           </div>
-          <span className="rounded-full bg-background/92 px-4 py-2 text-xs font-semibold text-foreground">
-            Libro de recuerdos
-          </span>
-        </div>
-        <div>
-          <p className="text-label text-background/75">{formatBookDate(album.date)}</p>
-          <h1 className="mt-4 max-w-3xl font-heading text-6xl font-semibold leading-[0.95] print:text-6xl">
-            {album.name}
-          </h1>
-          <p className="mt-6 max-w-xl text-lg leading-8 text-background/82">
-            Un album armado con las fotos que compartieron los invitados durante el
-            evento.
+          <p className="text-right text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#1f1b18]/62">
+            Digital memory book
           </p>
         </div>
-        <div className="grid max-w-xl gap-3 sm:grid-cols-3">
-          <BookStat icon={CameraIcon} label="recuerdos" value={photosCount} />
-          <BookStat icon={UsersIcon} label="invitados" value={contributors} />
-          <BookStat icon={HeartIcon} label="album" value="PDF" />
+
+        <div className="mt-10 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.42em] text-[#1f1b18]/64">
+            {formatBookDate(album.date)}
+          </p>
+          <h1 className="mx-auto mt-4 max-w-3xl font-heading text-5xl font-medium uppercase leading-[0.96] tracking-[0.12em] sm:text-6xl print:text-6xl">
+            {album.name}
+          </h1>
+          <div className="mx-auto mt-5 h-px w-52 bg-[#1f1b18]/28" />
+          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#1f1b18]/72">
+            {photosCount} recuerdos | {contributors} invitados | Album completo
+          </p>
+        </div>
+
+        <div className="mt-10 grid flex-1 items-end gap-6 lg:grid-cols-[0.82fr_1.18fr] print:grid-cols-[0.82fr_1.18fr]">
+          <div className="relative mx-auto w-full max-w-xs">
+            <div className="rounded-[1.6rem] bg-white p-3 shadow-[0_24px_60px_rgba(53,39,25,0.2)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={album.cover}
+                alt=""
+                className="aspect-[4/5] w-full rounded-[1.1rem] object-cover"
+              />
+              <div className="px-2 py-4 text-center">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-[#1f1b18]/58">
+                  Evento
+                </p>
+                <p className="mt-1 font-heading text-xl font-medium">{album.name}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="rounded-[1.8rem] bg-white p-4 shadow-[0_28px_70px_rgba(53,39,25,0.22)]">
+              <div className="grid gap-3 sm:grid-cols-2">
+                {getCoverPreviewPhotos(previewPhotos, album).map((photo, index) => (
+                  <figure
+                    key={photo.id}
+                    className={index === 0 ? "sm:col-span-2" : undefined}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={photo.originalSrc ?? photo.src}
+                      alt={photo.alt}
+                      className={
+                        index === 0
+                          ? "aspect-[16/9] w-full rounded-xl object-cover"
+                          : "aspect-square w-full rounded-xl object-cover"
+                      }
+                    />
+                  </figure>
+                ))}
+              </div>
+            </div>
+            <div className="absolute -right-4 top-8 max-w-60 rounded-full bg-[#d8c3ad]/88 px-6 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#1f1b18]/74 shadow-soft print:right-2">
+              Listo para imprimir o guardar en PDF
+            </div>
+          </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function BookStat({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof CameraIcon;
-  label: string;
-  value: number | string;
-}) {
-  return (
-    <div className="rounded-2xl bg-background/12 p-4 backdrop-blur">
-      <Icon className="size-5 text-background/85" />
-      <p className="mt-5 font-heading text-3xl font-semibold">{value}</p>
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-background/68">
-        {label}
-      </p>
-    </div>
   );
 }
 
@@ -110,18 +131,21 @@ function MemoryBookSpreadPage({
   index: number;
 }) {
   const heroPhoto = spread.photos[0];
-  const gridPhotos = spread.photos.slice(1, 6);
+  const gridPhotos = spread.photos.slice(1, 7);
 
   return (
-    <section className="memory-book-page rounded-[2rem] border border-border bg-card p-8 shadow-lifted print:rounded-none print:border-0 print:shadow-none">
-      <div className="grid h-full gap-7 lg:grid-cols-[0.9fr_1.1fr] print:grid-cols-[0.9fr_1.1fr]">
-        <div className="flex flex-col justify-between">
+    <section className="memory-book-page relative overflow-hidden rounded-[2rem] border border-[#d6c8b8] bg-[#faf6ee] p-8 text-[#1f1b18] shadow-lifted print:rounded-none print:border-0 print:shadow-none">
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(31,27,24,0.08)_0,transparent_8%,transparent_92%,rgba(31,27,24,0.06)_100%)]" />
+      <div className="relative grid h-full gap-7 lg:grid-cols-[0.78fr_1.22fr] print:grid-cols-[0.78fr_1.22fr]">
+        <div className="flex flex-col justify-between border-r border-[#1f1b18]/12 pr-6 print:pr-6">
           <div>
-            <p className="text-label text-primary">Capitulo {index + 1}</p>
-            <h2 className="mt-4 font-heading text-5xl font-semibold leading-tight">
+            <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#8f7256]">
+              Capitulo {String(index + 1).padStart(2, "0")}
+            </p>
+            <h2 className="mt-5 font-heading text-5xl font-medium leading-[0.98] tracking-wide">
               {spread.title}
             </h2>
-            <p className="mt-4 max-w-sm text-body text-muted-foreground">
+            <p className="mt-5 max-w-sm text-base leading-7 text-[#1f1b18]/62">
               {spread.subtitle}
             </p>
           </div>
@@ -129,16 +153,18 @@ function MemoryBookSpreadPage({
             <PhotoCredit guest={heroPhoto.guest} index={1} className="mt-8" />
           ) : null}
         </div>
-        <div className="grid min-h-[620px] grid-rows-[1.15fr_0.85fr] gap-4 print:min-h-0">
+        <div className="grid min-h-[620px] grid-rows-[1.05fr_0.95fr] gap-5 print:min-h-0">
           {heroPhoto ? (
-            <BookPhoto photo={heroPhoto} className="rounded-[1.75rem]" />
+            <BookPhoto photo={heroPhoto} featured />
           ) : null}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             {gridPhotos.map((photo, photoIndex) => (
               <BookPhoto
                 key={photo.id}
                 photo={photo}
-                className={photoIndex === 2 ? "col-span-2" : undefined}
+                className={
+                  photoIndex === 2 || photoIndex === 3 ? "col-span-1" : undefined
+                }
               />
             ))}
           </div>
@@ -151,19 +177,23 @@ function MemoryBookSpreadPage({
 function BookPhoto({
   photo,
   className,
+  featured = false,
 }: {
   photo: EventAlbum["photos"][number];
   className?: string;
+  featured?: boolean;
 }) {
   return (
-    <figure className={`relative min-h-44 overflow-hidden bg-muted ${className ?? ""}`}>
+    <figure
+      className={`relative min-h-36 overflow-hidden rounded-[1.35rem] bg-white p-2 shadow-[0_18px_42px_rgba(53,39,25,0.16)] ${className ?? ""}`}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={photo.originalSrc ?? photo.src}
         alt={photo.alt}
-        className="size-full object-cover"
+        className={`size-full rounded-[1rem] object-cover ${featured ? "aspect-[16/9]" : "aspect-square"}`}
       />
-      <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent p-3 text-xs font-semibold text-background">
+      <figcaption className="px-2 pt-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#1f1b18]/52">
         {photo.guest}
       </figcaption>
     </figure>
@@ -180,8 +210,8 @@ function PhotoCredit({
   className?: string;
 }) {
   return (
-    <p className={`text-sm text-muted-foreground ${className ?? ""}`}>
-      Foto principal por <span className="font-semibold text-foreground">{guest}</span> -
+    <p className={`text-sm leading-6 text-[#1f1b18]/58 ${className ?? ""}`}>
+      Foto principal por <span className="font-semibold text-[#1f1b18]">{guest}</span> -
       recuerdo {index}
     </p>
   );
@@ -195,25 +225,51 @@ function MemoryBookClosingPage({
   photosCount: number;
 }) {
   return (
-    <section className="memory-book-page flex flex-col justify-between rounded-[2rem] border border-border bg-soft-gradient p-10 shadow-lifted print:rounded-none print:border-0 print:shadow-none">
-      <div>
-        <p className="text-label text-primary">Keeps</p>
-        <h2 className="mt-4 max-w-2xl font-heading text-6xl font-semibold leading-[0.95]">
+    <section className="memory-book-page relative flex flex-col justify-between overflow-hidden rounded-[2rem] border border-[#d6c8b8] bg-[#f5efe6] p-10 text-[#1f1b18] shadow-lifted print:rounded-none print:border-0 print:shadow-none">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_20%,rgba(216,195,173,0.48),transparent_24%),linear-gradient(135deg,#fffaf1,#eadfce)]" />
+      <div className="relative">
+        <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#8f7256]">
+          Keeps
+        </p>
+        <h2 className="mt-5 max-w-3xl font-heading text-6xl font-medium uppercase leading-[0.96] tracking-[0.08em]">
           Gracias por compartir este recuerdo.
         </h2>
       </div>
-      <div className="grid gap-6 sm:grid-cols-[1fr_280px] sm:items-end">
-        <p className="max-w-xl text-body text-muted-foreground">
+      <div className="relative grid gap-6 sm:grid-cols-[1fr_280px] sm:items-end">
+        <p className="max-w-xl text-base leading-8 text-[#1f1b18]/64">
           {album.name} queda guardado con {photosCount} recuerdos compartidos por sus
           invitados. Cada foto forma parte de una historia hecha entre todos.
         </p>
-        <div className="rounded-3xl border border-border bg-card p-5 shadow-card">
-          <p className="text-label">Album original</p>
-          <p className="mt-2 break-all text-body-sm text-muted-foreground">
+        <div className="rounded-3xl border border-[#d8cbbb] bg-white/72 p-5 shadow-soft">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8f7256]">
+            Album original
+          </p>
+          <p className="mt-3 break-all text-sm leading-6 text-[#1f1b18]/62">
             keeps.tellez.website/a/{album.id}
           </p>
         </div>
       </div>
     </section>
   );
+}
+
+function getCoverPreviewPhotos(
+  photos: EventAlbum["photos"],
+  album: EventAlbum,
+): EventAlbum["photos"] {
+  if (photos.length > 0) {
+    return photos;
+  }
+
+  return [
+    {
+      id: "cover",
+      originalSrc: album.cover,
+      src: album.cover,
+      alt: album.name,
+      guest: "Keeps",
+      takenAt: album.date,
+      kind: "photo",
+    },
+  ];
 }

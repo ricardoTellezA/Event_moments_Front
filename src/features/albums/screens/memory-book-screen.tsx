@@ -58,7 +58,7 @@ export function MemoryBookScreen({ id }: { id: string }) {
   }
 
   return (
-    <main className="memory-book-root min-h-screen bg-soft-gradient px-5 py-6 print:bg-white print:p-0">
+    <main className="memory-book-root min-h-screen bg-[#e9e1d4] px-5 py-6 print:bg-white print:p-0">
       <div className="mx-auto mb-6 flex max-w-5xl items-center justify-between gap-3 print:hidden">
         <Button
           variant="ghost"
