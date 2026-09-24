@@ -75,7 +75,7 @@ export function LiveAlbumScreen({ id }: { id: string }) {
   };
 
   if (album === undefined) {
-    return <main className="min-h-screen bg-zinc-950" />;
+    return <main className="h-dvh bg-zinc-950" />;
   }
 
   if (album === null) {
@@ -96,9 +96,9 @@ export function LiveAlbumScreen({ id }: { id: string }) {
 
   if (!activePhoto) {
     return (
-      <main className="min-h-screen bg-zinc-950 px-5 py-6 text-white">
+      <main className="h-dvh overflow-hidden bg-zinc-950 px-4 py-3 text-white sm:px-5 sm:py-6">
         <LiveTopBar albumId={album.id} albumName={album.name} shareUrl={shareUrl} />
-        <div className="flex min-h-[75vh] items-center justify-center text-center">
+        <div className="flex h-[calc(100dvh-6rem)] items-center justify-center text-center">
           <EmptyState
             title="Todavia no hay recuerdos aprobados"
             description="Aprueba fotos desde moderacion para iniciar la pantalla en vivo."
@@ -118,7 +118,7 @@ export function LiveAlbumScreen({ id }: { id: string }) {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-zinc-950 text-white">
+    <main className="relative h-dvh overflow-hidden bg-zinc-950 text-white">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         key={`${activePhoto.id}-backdrop`}
@@ -128,30 +128,30 @@ export function LiveAlbumScreen({ id }: { id: string }) {
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),rgba(9,9,11,0.86)_58%,rgba(9,9,11,0.98))]" />
 
-      <div className="relative z-10 flex min-h-screen flex-col px-4 py-4 sm:px-6">
+      <div className="relative z-10 flex h-dvh flex-col gap-3 px-3 py-3 sm:px-5 sm:py-4 lg:gap-4 lg:px-6">
         <LiveTopBar albumId={album.id} albumName={album.name} shareUrl={shareUrl} />
 
-        <section className="grid flex-1 place-items-center py-6">
-          <div className="relative flex h-[68vh] w-full max-w-6xl items-center justify-center">
+        <section className="grid min-h-0 flex-1 place-items-center">
+          <div className="relative flex size-full max-w-6xl items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               key={activePhoto.id}
               src={activePhoto.displaySrc}
               alt={activePhoto.alt}
-              className="max-h-full max-w-full rounded-[1.75rem] object-contain shadow-[0_30px_100px_rgba(0,0,0,0.55)]"
+              className="max-h-full max-w-full rounded-2xl object-contain shadow-[0_30px_100px_rgba(0,0,0,0.55)] sm:rounded-[1.75rem]"
             />
           </div>
         </section>
 
-        <div className="mb-3 flex flex-wrap items-end justify-between gap-4 rounded-[1.75rem] border border-white/12 bg-zinc-950/62 px-5 py-4 shadow-[0_20px_70px_rgba(0,0,0,0.42)] backdrop-blur-xl">
+        <div className="flex shrink-0 items-center justify-between gap-3 rounded-3xl border border-white/12 bg-zinc-950/68 px-4 py-3 shadow-[0_20px_70px_rgba(0,0,0,0.42)] backdrop-blur-xl sm:mb-2 sm:px-5 sm:py-4">
           <div className="min-w-0">
-            <p className="text-xs font-medium uppercase tracking-[0.24em] text-white/62">
+            <p className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-white/62 sm:text-xs sm:tracking-[0.24em]">
               Recuerdo {safeIndex + 1} de {photos.length}
             </p>
-            <h2 className="mt-2 truncate font-heading text-3xl font-medium leading-none text-white sm:text-4xl">
+            <h2 className="mt-1 truncate font-heading text-2xl font-medium leading-none text-white sm:mt-2 sm:text-4xl">
               {activePhoto.guest}
             </h2>
-            <p className="mt-2 text-sm font-normal text-white/68">
+            <p className="mt-1 truncate text-xs font-normal text-white/68 sm:mt-2 sm:text-sm">
               {new Date(activePhoto.takenAt).toLocaleString("es-MX", {
                 day: "numeric",
                 hour: "2-digit",
@@ -161,7 +161,7 @@ export function LiveAlbumScreen({ id }: { id: string }) {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 rounded-full border border-white/12 bg-white/10 p-2 text-white shadow-soft backdrop-blur">
+          <div className="flex shrink-0 items-center gap-1 rounded-full border border-white/12 bg-white/10 p-1 text-white shadow-soft backdrop-blur sm:gap-2 sm:p-2">
             <Button
               aria-label="Foto anterior"
               size="icon"
@@ -169,15 +169,15 @@ export function LiveAlbumScreen({ id }: { id: string }) {
               className="text-white/75 hover:bg-white/12 hover:text-white"
               onClick={goToPrevious}
             >
-              <ChevronLeftIcon />
+              <ChevronLeftIcon className="size-4" />
             </Button>
             <Button
               aria-label={paused ? "Reproducir" : "Pausar"}
               size="icon"
-              className="bg-white text-zinc-950 hover:bg-white/90"
+              className="size-9 bg-white text-zinc-950 hover:bg-white/90 sm:size-10"
               onClick={() => setPaused((currentValue) => !currentValue)}
             >
-              {paused ? <PlayIcon /> : <PauseIcon />}
+              {paused ? <PlayIcon className="size-4" /> : <PauseIcon className="size-4" />}
             </Button>
             <Button
               aria-label="Siguiente foto"
@@ -186,7 +186,7 @@ export function LiveAlbumScreen({ id }: { id: string }) {
               className="text-white/75 hover:bg-white/12 hover:text-white"
               onClick={goToNext}
             >
-              <ChevronRightIcon />
+              <ChevronRightIcon className="size-4" />
             </Button>
             <Button
               aria-label="Pantalla completa"
@@ -195,7 +195,7 @@ export function LiveAlbumScreen({ id }: { id: string }) {
               className="text-white/75 hover:bg-white/12 hover:text-white"
               onClick={toggleFullscreen}
             >
-              <Maximize2Icon />
+              <Maximize2Icon className="size-4" />
             </Button>
           </div>
         </div>
@@ -214,16 +214,16 @@ function LiveTopBar({
   shareUrl: string;
 }) {
   return (
-    <header className="flex flex-wrap items-center justify-between gap-3 rounded-full border border-white/10 bg-zinc-950/58 px-3 py-2 text-white shadow-[0_16px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-      <div className="flex items-center gap-3">
+    <header className="flex shrink-0 items-center justify-between gap-2 rounded-3xl border border-white/10 bg-zinc-950/64 px-2 py-2 text-white shadow-[0_16px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:gap-3 sm:rounded-full sm:px-3">
+      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
         <Button
           variant="ghost"
-          className="text-white/62 hover:bg-white/10 hover:text-white"
+          className="h-9 px-2 text-white/62 hover:bg-white/10 hover:text-white sm:px-3"
           nativeButton={false}
           render={<Link href={`/a/${albumId}/administrar`} />}
         >
-          <ArrowLeftIcon />
-          Panel
+          <ArrowLeftIcon className="size-4" />
+          <span className="hidden sm:inline">Panel</span>
         </Button>
         <div className="hidden items-center gap-3 sm:flex">
           <AppLogo className="text-white" />
@@ -238,10 +238,10 @@ function LiveTopBar({
         </div>
       </div>
 
-      <div className="flex min-w-0 items-center gap-3 rounded-full border border-white/12 bg-white/10 px-4 py-2 text-sm text-white/78 backdrop-blur">
-        <span className="h-2 w-2 rounded-full bg-emerald-300" />
+      <div className="flex min-w-0 items-center gap-2 rounded-full border border-white/12 bg-white/10 px-3 py-2 text-xs text-white/78 backdrop-blur sm:gap-3 sm:px-4 sm:text-sm">
+        <span className="size-2 shrink-0 rounded-full bg-emerald-300" />
         <span className="hidden font-normal sm:inline">Sube tus recuerdos</span>
-        <span className="max-w-[56vw] truncate font-medium text-white">
+        <span className="max-w-[64vw] truncate font-medium text-white sm:max-w-[56vw]">
           {shareUrl.replace(/^https?:\/\//, "")}
         </span>
       </div>
