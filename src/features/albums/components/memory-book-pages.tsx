@@ -157,16 +157,14 @@ function MemoryBookSpreadPage({
         </div>
         <div className="grid min-h-0 gap-4 sm:gap-5 lg:min-h-[620px] lg:grid-rows-[1.05fr_0.95fr] print:min-h-0">
           {heroPhoto ? (
-            <BookPhoto photo={heroPhoto} featured />
+            <BookPhoto photo={heroPhoto} className="h-full" featured />
           ) : null}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-            {gridPhotos.map((photo, photoIndex) => (
+            {gridPhotos.map((photo) => (
               <BookPhoto
                 key={photo.id}
                 photo={photo}
-                className={
-                  photoIndex === 2 || photoIndex === 3 ? "col-span-1" : undefined
-                }
+                className="h-full"
               />
             ))}
           </div>
@@ -187,15 +185,17 @@ function BookPhoto({
 }) {
   return (
     <figure
-      className={`relative min-h-0 overflow-hidden rounded-[1.1rem] bg-white p-2 shadow-[0_18px_42px_rgba(53,39,25,0.16)] sm:rounded-[1.35rem] ${className ?? ""}`}
+      className={`relative flex min-h-0 flex-col overflow-hidden rounded-[1.1rem] bg-white p-2 shadow-[0_18px_42px_rgba(53,39,25,0.16)] sm:rounded-[1.35rem] ${className ?? ""}`}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={photo.originalSrc ?? photo.src}
-        alt={photo.alt}
-        className={`w-full rounded-[0.85rem] object-cover sm:rounded-[1rem] ${featured ? "aspect-[16/9]" : "aspect-square"}`}
-      />
-      <figcaption className="truncate px-1.5 pt-2 text-[0.58rem] font-semibold uppercase tracking-[0.1em] text-[#1f1b18]/52 sm:px-2 sm:text-[0.65rem] sm:tracking-[0.14em]">
+      <div className="min-h-0 flex-1 overflow-hidden rounded-[0.85rem] sm:rounded-[1rem]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={photo.originalSrc ?? photo.src}
+          alt={photo.alt}
+          className={`size-full object-cover ${featured ? "min-h-52" : "min-h-28"}`}
+        />
+      </div>
+      <figcaption className="shrink-0 truncate px-1.5 pt-2 text-[0.58rem] font-semibold uppercase tracking-[0.1em] text-[#1f1b18]/52 sm:px-2 sm:text-[0.65rem] sm:tracking-[0.14em]">
         {photo.guest}
       </figcaption>
     </figure>
