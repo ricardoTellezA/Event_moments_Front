@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { DownloadIcon, SettingsIcon } from "lucide-react";
+import { ClipboardCheckIcon, DownloadIcon, SettingsIcon } from "lucide-react";
 
 import { ScrollReveal } from "@/components/shared/scroll-reveal/scroll-reveal";
 import { Button } from "@/components/ui/button";
@@ -58,15 +58,26 @@ export function PublicAlbumActions({
         </Button>
       ) : null}
       {canManage ? (
-        <Button
-          variant="ghost"
-          size="lg"
-          nativeButton={false}
-          render={<Link href={`/a/${albumId}/administrar`} />}
-        >
-          <SettingsIcon />
-          Administrar
-        </Button>
+        <>
+          <Button
+            className="bg-afterglow shadow-soft"
+            size="lg"
+            nativeButton={false}
+            render={<Link href={`/a/${albumId}/administrar#moderacion`} />}
+          >
+            <ClipboardCheckIcon />
+            Revisar fotos
+          </Button>
+          <Button
+            variant="ghost"
+            size="lg"
+            nativeButton={false}
+            render={<Link href={`/a/${albumId}/administrar`} />}
+          >
+            <SettingsIcon />
+            Administrar
+          </Button>
+        </>
       ) : null}
       {uploadMsLabel ? (
         <span className="rounded-full bg-muted px-3 py-1.5 text-sm text-muted-foreground">

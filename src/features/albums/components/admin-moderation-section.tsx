@@ -74,67 +74,69 @@ export function AdminModerationSection({
   ];
 
   return (
-    <ScrollReveal className="space-y-4">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h2 className="font-heading text-2xl font-semibold">Moderar recuerdos</h2>
-          <p className="mt-1 max-w-xl text-sm leading-6 text-muted-foreground">
-            Revisa lo que suben los invitados antes de mostrarlo en publico.
-          </p>
+    <section id="moderacion" className="scroll-mt-8">
+      <ScrollReveal className="space-y-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="font-heading text-2xl font-semibold">Moderar recuerdos</h2>
+            <p className="mt-1 max-w-xl text-sm leading-6 text-muted-foreground">
+              Revisa lo que suben los invitados antes de mostrarlo en publico.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-1.5 text-xs font-semibold text-muted-foreground">
+            <span className="rounded-full bg-muted/70 px-2.5 py-1">
+              {pendingPhotos.length} pendientes
+            </span>
+            <span className="rounded-full bg-muted/70 px-2.5 py-1">
+              {approvedPhotos.length} aprobadas
+            </span>
+            <span className="rounded-full bg-muted/70 px-2.5 py-1">
+              {rejectedPhotos.length} rechazadas
+            </span>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-1.5 text-xs font-semibold text-muted-foreground">
-          <span className="rounded-full bg-muted/70 px-2.5 py-1">
-            {pendingPhotos.length} pendientes
-          </span>
-          <span className="rounded-full bg-muted/70 px-2.5 py-1">
-            {approvedPhotos.length} aprobadas
-          </span>
-          <span className="rounded-full bg-muted/70 px-2.5 py-1">
-            {rejectedPhotos.length} rechazadas
-          </span>
-        </div>
-      </div>
 
-      <Tabs defaultValue="pending">
-        <TabsList className="grid h-auto w-full grid-cols-4 gap-1 rounded-xl bg-muted p-1">
+        <Tabs defaultValue="pending">
+          <TabsList className="grid h-auto w-full grid-cols-4 gap-1 rounded-xl bg-muted p-1">
+            {moderationTabs.map((tab) => (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className=" min-w-0 rounded-lg border-0 bg-transparent px-1.5 text-xs font-semibold text-muted-foreground shadow-none after:hidden data-active:bg-background data-active:text-foreground data-active:shadow-soft sm:h-10 sm:text-sm"
+              >
+                <span className="truncate sm:hidden">{tab.shortLabel}</span>
+                <span className="hidden truncate sm:inline">{tab.label}</span>
+                <span className="ml-1 grid min-w-5 place-items-center rounded-full bg-muted/80 px-1 text-[0.68rem] font-semibold text-foreground">
+                  {tab.count}
+                </span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
           {moderationTabs.map((tab) => (
-            <TabsTrigger
+            <TabsContent
               key={tab.value}
               value={tab.value}
-              className=" min-w-0 rounded-lg border-0 bg-transparent px-1.5 text-xs font-semibold text-muted-foreground shadow-none after:hidden data-active:bg-background data-active:text-foreground data-active:shadow-soft sm:h-10 sm:text-sm"
+              className="mt-5 animate-wizard-forward"
             >
-              <span className="truncate sm:hidden">{tab.shortLabel}</span>
-              <span className="hidden truncate sm:inline">{tab.label}</span>
-              <span className="ml-1 grid min-w-5 place-items-center rounded-full bg-muted/80 px-1 text-[0.68rem] font-semibold text-foreground">
-                {tab.count}
-              </span>
-            </TabsTrigger>
+              {tab.photos.length > 0 ? (
+                <MemoryGrid
+                  photos={tab.photos}
+                  moderation
+                  onApprove={onApprove}
+                  onReject={onReject}
+                  onRemove={onRemove}
+                />
+              ) : (
+                <ModerationEmptyState
+                  title={tab.emptyTitle}
+                  description={tab.emptyDescription}
+                />
+              )}
+            </TabsContent>
           ))}
-        </TabsList>
-        {moderationTabs.map((tab) => (
-          <TabsContent
-            key={tab.value}
-            value={tab.value}
-            className="mt-5 animate-wizard-forward"
-          >
-            {tab.photos.length > 0 ? (
-              <MemoryGrid
-                photos={tab.photos}
-                moderation
-                onApprove={onApprove}
-                onReject={onReject}
-                onRemove={onRemove}
-              />
-            ) : (
-              <ModerationEmptyState
-                title={tab.emptyTitle}
-                description={tab.emptyDescription}
-              />
-            )}
-          </TabsContent>
-        ))}
-      </Tabs>
-    </ScrollReveal>
+        </Tabs>
+      </ScrollReveal>
+    </section>
   );
 }
 
