@@ -125,7 +125,11 @@ export function PublicAlbumScreen({ id }: { id: string }) {
           <PublicAlbumTabs album={album} onVote={handleVote} showStatus />
         )}
         <ScrollReveal>
-          <AlbumShareCard title={album.name} url={shareUrl} />
+          <AlbumShareCard
+            albumId={canManage ? album.id : undefined}
+            title={album.name}
+            url={shareUrl}
+          />
         </ScrollReveal>
       </div>
     </main>

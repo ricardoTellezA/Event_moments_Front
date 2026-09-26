@@ -65,7 +65,7 @@ export function AdminAlbumScreen({ id }: { id: string }) {
         onReject={(photoId) => void admin.moderatePhoto(photoId, "rejected")}
         onRemove={(photoId) => void admin.removePhoto(photoId)}
       />
-      <AlbumShareCard title={album.name} url={admin.shareUrl} />
+      <AlbumShareCard albumId={album.id} title={album.name} url={admin.shareUrl} />
       <AdminDangerActions
         frozen={album.frozen}
         onToggleFrozen={admin.toggleFrozen}
