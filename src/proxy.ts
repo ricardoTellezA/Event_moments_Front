@@ -4,6 +4,7 @@ const isProtectedRoute = createRouteMatcher([
   "/crear(.*)",
   "/mis-albumes(.*)",
   "/a/:id/administrar(.*)",
+  "/a/:id/revisar(.*)",
   "/a/:id/qr(.*)",
   "/a/:id/libro(.*)",
   "/a/:id/live(.*)",

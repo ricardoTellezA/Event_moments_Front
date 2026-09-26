@@ -110,7 +110,7 @@ export function useAdminAlbumController(id: string) {
 
   const moderatePhoto = async (
     photoId: string,
-    nextStatus: "approved" | "rejected",
+    nextStatus: "pending" | "approved" | "rejected",
   ) => {
     if (!album) {
       return;
@@ -129,7 +129,11 @@ export function useAdminAlbumController(id: string) {
       await updateEventPhotoStatus(album.dbId ?? album.id, photoId, nextStatus, token);
       void refreshAlbum();
       toast.success(
-        nextStatus === "approved" ? "Recuerdo aprobado" : "Recuerdo rechazado",
+        nextStatus === "approved"
+          ? "Recuerdo aprobado"
+          : nextStatus === "rejected"
+            ? "Recuerdo rechazado"
+            : "Recuerdo pendiente",
       );
     } catch {
       setAlbum(previousAlbum);

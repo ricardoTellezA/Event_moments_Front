@@ -63,7 +63,7 @@ export function PublicAlbumActions({
             className="bg-afterglow shadow-soft"
             size="lg"
             nativeButton={false}
-            render={<Link href={`/a/${albumId}/administrar#moderacion`} />}
+            render={<Link href={`/a/${albumId}/revisar`} />}
           >
             <ClipboardCheckIcon />
             Revisar fotos
