@@ -109,30 +109,37 @@ export function PrintableQrScreen({ id }: { id: string }) {
                   strokeLinecap="round"
                 />
               </svg>
-              <div className="absolute left-1/2 top-[60.5%] grid aspect-square w-[26%] -translate-x-1/2 -translate-y-1/2 place-items-center bg-[#fbf8f0] p-[1.5%]">
+              <div className="absolute left-1/2 top-[60.5%] grid aspect-square w-[26%] -translate-x-1/2 -translate-y-1/2 place-items-center p-[1.5%]">
                   <QRCodeSVG
                     value={shareUrl}
                     title={`QR para subir fotos a ${album.name}`}
                     size={720}
                     level="M"
                     marginSize={1}
+                    bgColor="transparent"
                     className="h-full w-full"
                   />
               </div>
             </div>
 
-            <div className="space-y-5">
-              <p className="mx-auto max-w-[3.8in] text-[0.66rem] font-semibold uppercase leading-5 tracking-[0.22em] text-[#1f1b18]/62">
-                Escanea el QR y comparte tus momentos favoritos junto a nosotros
+            <div className="space-y-4">
+              <p className="font-heading text-xl italic leading-snug text-[#1f1b18]">
+                Ayudanos a recordar este dia para siempre
               </p>
-              <div>
-                <p className="font-heading text-4xl font-normal leading-none text-[#1f1b18]">
-                  {album.name}
-                </p>
-                <p className="mt-2 text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-[#1f1b18]/52">
-                  {eventDate}
-                </p>
-              </div>
+              <ol className="mx-auto max-w-[4.2in] space-y-1.5 text-center font-heading text-[0.92rem] font-semibold uppercase leading-tight tracking-[0.03em] text-[#1f1b18]">
+                <li>1. Escanea el QR</li>
+                <li>2. Entra a Keeps, pon tu nombre y comparte tus recuerdos</li>
+                <li>3. Disfruta y sube muchas fotos</li>
+              </ol>
+              <p className="mx-auto max-w-[3.6in] text-[0.58rem] font-semibold uppercase leading-4 tracking-[0.14em] text-[#1f1b18]/58">
+                No necesitas instalar nada. Abre el link desde tu celular.
+              </p>
+              <p className="font-heading text-4xl font-normal italic leading-none text-[#1f1b18]">
+                {album.name}
+              </p>
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-[#1f1b18]/52">
+                {eventDate}
+              </p>
               <p className="break-all text-[0.58rem] font-medium text-[#1f1b18]/38 print:hidden">
                 {shareUrl}
               </p>
