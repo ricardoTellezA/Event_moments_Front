@@ -276,7 +276,8 @@
     page-break-inside: avoid;
     height: calc(11in - 0.7in);
     max-height: calc(11in - 0.7in);
-    border-radius: 0.32in !important;
+    width: calc(8.5in - 0.7in);
+    border-radius: 0 !important;
     overflow: hidden;
   }
 

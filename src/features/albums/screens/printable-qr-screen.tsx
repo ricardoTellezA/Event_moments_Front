@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
-import { ArrowLeftIcon, CameraIcon, PrinterIcon } from "lucide-react";
+import { ArrowLeftIcon, PrinterIcon } from "lucide-react";
 
 import { EmptyState } from "@/components/shared/empty-state/empty-state";
 import { Button } from "@/components/ui/button";
@@ -31,9 +31,15 @@ export function PrintableQrScreen({ id }: { id: string }) {
     );
   }
 
+  const eventDate = new Date(album.date).toLocaleDateString("es-MX", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
-    <main className="qr-print-root min-h-screen bg-soft-gradient px-5 py-6 print:bg-white print:p-0">
-      <div className="mx-auto max-w-3xl print:max-w-none">
+    <main className="qr-print-root min-h-screen bg-[#eee8dd] px-5 py-6 print:bg-white print:p-0">
+      <div className="mx-auto max-w-xl print:max-w-none">
         <div className="mb-6 flex items-center justify-between gap-3 print:hidden">
           <Button
             variant="ghost"
@@ -49,56 +55,50 @@ export function PrintableQrScreen({ id }: { id: string }) {
           </Button>
         </div>
 
-        <section className="qr-print-sheet overflow-hidden rounded-[2rem] border border-border bg-card shadow-lifted">
-          <div className="relative min-h-48 overflow-hidden bg-foreground px-8 py-7 text-background print:min-h-40">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={album.cover}
-              alt=""
-              className="absolute inset-0 size-full object-cover opacity-45"
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-foreground/80 via-foreground/55 to-foreground/10" />
-            <div className="relative flex items-center justify-between gap-4">
-              <div className="inline-flex items-center gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-afterglow text-primary-foreground shadow-soft">
-                  <CameraIcon className="size-5" />
-                </span>
-                <span className="text-label text-background">Keeps</span>
-              </div>
-              <span className="rounded-full bg-background/92 px-4 py-2 text-xs font-semibold text-foreground">
-                Sin cuenta para invitados
-              </span>
-            </div>
-            <h1 className="relative mt-12 max-w-xl font-heading text-5xl font-semibold leading-tight print:mt-8 print:text-4xl">
-              Sube tus fotos a {album.name}
-            </h1>
-            <p className="relative mt-4 max-w-md text-base leading-7 text-background/85 print:text-sm print:leading-6">
-              Escanea el QR desde tu celular y comparte tus mejores recuerdos del
-              evento.
-            </p>
-          </div>
-
-          <div className="grid gap-7 p-8 text-center print:grid-cols-[1fr_1.1fr] print:items-center print:gap-6 print:p-6 print:text-left">
-            <div className="mx-auto w-full max-w-sm rounded-[1.75rem] border border-border bg-white p-4 shadow-soft print:max-w-none print:p-3 print:shadow-none">
-              <QRCodeSVG
-                value={shareUrl}
-                title={`QR para subir fotos a ${album.name}`}
-                size={720}
-                level="M"
-                marginSize={3}
-                className="aspect-square w-full"
-              />
-            </div>
+        <section className="qr-print-sheet relative overflow-hidden rounded-[1.4rem] border border-[#d8cec0] bg-[#fbf8f0] px-8 py-10 text-center text-[#1f1b18] shadow-lifted print:rounded-none print:border-0 print:shadow-none">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_8%,rgba(255,255,255,0.95),transparent_28%),linear-gradient(145deg,#fffdf7,#eee2d1)]" />
+          <div className="relative mx-auto flex h-full max-w-[4.8in] flex-col items-center justify-between gap-6">
             <div>
-              <p className="text-label text-primary">Como participar</p>
-              <h2 className="mt-3 font-heading text-4xl font-semibold leading-tight print:text-3xl">
-                Abre tu camara, apunta al QR y sube tus fotos.
-              </h2>
-              <p className="mt-4 text-body-sm text-muted-foreground">
-                No necesitas instalar nada. Entras al album, escribes tu nombre y
-                seleccionas las fotos desde tu galeria.
+              <p className="text-xs font-semibold uppercase tracking-[0.44em] text-[#1f1b18]/62">
+                Recuerdos para
               </p>
-              <p className="mt-6 break-all rounded-2xl bg-muted px-4 py-3 text-sm font-medium text-muted-foreground print:text-xs">
+              <h1 className="mt-1 font-heading text-5xl font-normal leading-none tracking-wide text-[#1f1b18]">
+                siempre
+              </h1>
+            </div>
+
+            <div className="relative w-full max-w-[4.05in]">
+              <div className="qr-camera-shell relative mx-auto aspect-[1.34/1] w-full">
+                <div className="absolute left-[5%] top-[26%] h-[12%] w-[15%] rounded-[0.16in] border-[0.04in] border-[#1f1b18]" />
+                <div className="absolute left-[16%] top-[18%] h-[72%] w-[76%] rounded-[0.22in] border-[0.045in] border-[#1f1b18]" />
+                <div className="absolute left-[38%] top-[8%] h-[18%] w-[24%] rounded-t-[0.22in] border-x-[0.045in] border-t-[0.045in] border-[#1f1b18] bg-[#fbf8f0]" />
+                <div className="absolute left-[35%] top-[29%] grid aspect-square w-[36%] place-items-center rounded-full border-[0.045in] border-[#1f1b18] bg-[#fbf8f0] p-[0.12in]">
+                  <QRCodeSVG
+                    value={shareUrl}
+                    title={`QR para subir fotos a ${album.name}`}
+                    size={720}
+                    level="M"
+                    marginSize={1}
+                    className="aspect-square w-full"
+                  />
+                </div>
+                <div className="absolute bottom-[10%] left-[16%] h-[0.045in] w-[18%] bg-[#1f1b18]" />
+              </div>
+            </div>
+
+            <div className="space-y-5">
+              <p className="mx-auto max-w-[3.8in] text-[0.66rem] font-semibold uppercase leading-5 tracking-[0.22em] text-[#1f1b18]/62">
+                Escanea el QR y comparte tus momentos favoritos junto a nosotros
+              </p>
+              <div>
+                <p className="font-heading text-4xl font-normal leading-none text-[#1f1b18]">
+                  {album.name}
+                </p>
+                <p className="mt-2 text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-[#1f1b18]/52">
+                  {eventDate}
+                </p>
+              </div>
+              <p className="break-all text-[0.58rem] font-medium text-[#1f1b18]/38 print:hidden">
                 {shareUrl}
               </p>
             </div>
