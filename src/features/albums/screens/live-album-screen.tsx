@@ -6,6 +6,7 @@ import {
   ArrowLeftIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ImagesIcon,
   Maximize2Icon,
   PauseIcon,
   PlayIcon,
@@ -99,19 +100,37 @@ export function LiveAlbumScreen({ id }: { id: string }) {
       <main className="h-dvh overflow-hidden bg-zinc-950 px-4 py-3 text-white sm:px-5 sm:py-6">
         <LiveTopBar albumId={album.id} albumName={album.name} shareUrl={shareUrl} />
         <div className="flex h-[calc(100dvh-6rem)] items-center justify-center text-center">
-          <EmptyState
-            title="Todavia no hay recuerdos aprobados"
-            description="Aprueba fotos desde moderacion para iniciar la pantalla en vivo."
-            action={
+          <div className="w-full max-w-md rounded-[2rem] border border-white/12 bg-zinc-900/78 px-6 py-7 text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:px-8 sm:py-8">
+            <span className="mx-auto grid size-12 place-items-center rounded-2xl border border-white/10 bg-white/10 text-white shadow-soft">
+              <ImagesIcon className="size-5" />
+            </span>
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.26em] text-white/46">
+              Pantalla en espera
+            </p>
+            <h2 className="mt-2 font-heading text-3xl font-medium leading-tight text-white">
+              No hay fotos aprobadas
+            </h2>
+            <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-white/62">
+              Revisa los recuerdos pendientes y aprueba los que quieras mostrar en la pantalla en vivo.
+            </p>
+            <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row">
               <Button
                 className="bg-afterglow"
                 nativeButton={false}
+                render={<Link href={`/a/${album.id}/revisar`} />}
+              >
+                Revisar fotos
+              </Button>
+              <Button
+                variant="outline"
+                className="border-white/15 bg-white/8 text-white hover:bg-white/12 hover:text-white"
+                nativeButton={false}
                 render={<Link href={`/a/${album.id}/administrar`} />}
               >
-                Volver al panel
+                Ir al panel
               </Button>
-            }
-          />
+            </div>
+          </div>
         </div>
       </main>
     );
