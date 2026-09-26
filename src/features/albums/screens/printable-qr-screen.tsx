@@ -67,22 +67,57 @@ export function PrintableQrScreen({ id }: { id: string }) {
               </h1>
             </div>
 
-            <div className="relative w-full max-w-[4.05in]">
-              <div className="qr-camera-shell relative mx-auto aspect-[1.34/1] w-full">
-                <div className="absolute left-[5%] top-[26%] h-[12%] w-[15%] rounded-[0.16in] border-[0.04in] border-[#1f1b18]" />
-                <div className="absolute left-[16%] top-[18%] h-[72%] w-[76%] rounded-[0.22in] border-[0.045in] border-[#1f1b18]" />
-                <div className="absolute left-[38%] top-[8%] h-[18%] w-[24%] rounded-t-[0.22in] border-x-[0.045in] border-t-[0.045in] border-[#1f1b18] bg-[#fbf8f0]" />
-                <div className="absolute left-[35%] top-[29%] grid aspect-square w-[36%] place-items-center rounded-full border-[0.045in] border-[#1f1b18] bg-[#fbf8f0] p-[0.12in]">
+            <div className="relative mx-auto aspect-[4/3] w-full max-w-[4.05in]">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 520 390"
+                className="absolute inset-0 h-full w-full"
+                fill="none"
+              >
+                <path
+                  d="M121 162H82c-19 0-34 15-34 34v4c0 19 15 34 34 34h39"
+                  stroke="currentColor"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M122 118h276c30 0 54 24 54 54v112c0 30-24 54-54 54H122c-30 0-54-24-54-54V172c0-30 24-54 54-54Z"
+                  stroke="currentColor"
+                  strokeWidth="8"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M210 118V88c0-23 19-42 42-42h57c23 0 42 19 42 42v30"
+                  stroke="currentColor"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <circle
+                  cx="260"
+                  cy="236"
+                  r="92"
+                  fill="#fbf8f0"
+                  stroke="currentColor"
+                  strokeWidth="8"
+                />
+                <path
+                  d="M68 338h76"
+                  stroke="currentColor"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute left-1/2 top-[60.5%] grid aspect-square w-[26%] -translate-x-1/2 -translate-y-1/2 place-items-center bg-[#fbf8f0] p-[1.5%]">
                   <QRCodeSVG
                     value={shareUrl}
                     title={`QR para subir fotos a ${album.name}`}
                     size={720}
                     level="M"
                     marginSize={1}
-                    className="aspect-square w-full"
+                    className="h-full w-full"
                   />
-                </div>
-                <div className="absolute bottom-[10%] left-[16%] h-[0.045in] w-[18%] bg-[#1f1b18]" />
               </div>
             </div>
 
