@@ -12,9 +12,9 @@ export function CreateAlbumStepper({
   currentStep: number;
 }) {
   return (
-    <ol className="flex items-center gap-3 text-sm">
+    <ol className="grid grid-cols-3 gap-2 text-xs sm:flex sm:items-center sm:gap-3 sm:text-sm">
       {steps.map((item, index) => (
-        <li key={item} className="flex flex-1 items-center gap-2">
+        <li key={item} className="flex min-w-0 flex-1 items-center gap-2">
           <span
             className={
               index <= currentStep
@@ -31,8 +31,8 @@ export function CreateAlbumStepper({
           <span
             className={
               index === currentStep
-                ? "font-semibold transition-colors duration-300"
-                : "text-muted-foreground transition-colors duration-300"
+                ? "min-w-0 font-semibold leading-tight transition-colors duration-300"
+                : "min-w-0 leading-tight text-muted-foreground transition-colors duration-300"
             }
           >
             {item}
@@ -73,8 +73,8 @@ export function Pill({
       onClick={onClick}
       className={
         active
-          ? "rounded-full border border-transparent bg-afterglow px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft transition-all duration-300"
-          : "rounded-full border border-border px-4 py-2 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:bg-muted"
+          ? "rounded-full border border-transparent bg-afterglow px-3.5 py-2 text-sm font-semibold text-primary-foreground shadow-soft transition-all duration-300 sm:px-4"
+          : "rounded-full border border-border px-3.5 py-2 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:bg-muted sm:px-4"
       }
     >
       {children}
@@ -94,7 +94,7 @@ export function ToggleRow({
   onCheckedChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 rounded-2xl border border-border/70 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card">
+    <div className="flex items-start justify-between gap-4 rounded-2xl border border-border/70 p-3.5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card sm:p-4">
       <div>
         <p className="font-semibold">{label}</p>
         {hint ? <p className="mt-1 text-sm text-muted-foreground">{hint}</p> : null}

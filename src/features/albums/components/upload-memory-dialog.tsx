@@ -125,14 +125,14 @@ export function UploadMemoryDialog({
           <Button
             disabled={disabled}
             size="lg"
-            className="bg-afterglow shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lifted"
+            className="col-span-2 w-full bg-afterglow shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lifted sm:col-span-1 sm:w-auto"
           />
         }
       >
         <ImagePlusIcon />
         Subir fotos
       </DialogTrigger>
-      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
+      <DialogContent className="max-h-[calc(100dvh-1rem)] overflow-y-auto rounded-[1.6rem] p-5 sm:max-h-[calc(100dvh-2rem)] sm:p-6">
         <DialogHeader>
           <DialogTitle>Subir recuerdos</DialogTitle>
           <DialogDescription>
@@ -193,7 +193,7 @@ export function UploadMemoryDialog({
                 Limpiar
               </Button>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               {selectedMemories.map((memory) => (
                 <div
                   key={memory.id}
@@ -239,7 +239,7 @@ export function UploadMemoryDialog({
 
         <DialogFooter>
           <Button
-            className="bg-afterglow"
+            className="w-full bg-afterglow sm:w-auto"
             disabled={isUploading || !selectedMemories.length}
             onClick={() => void handleUpload()}
           >

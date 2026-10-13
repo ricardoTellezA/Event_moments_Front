@@ -23,16 +23,22 @@ export function AlbumShareCard({
   };
 
   return (
-    <section className="rounded-3xl border border-border bg-card p-6 shadow-soft">
+    <section className="rounded-[1.6rem] border border-border bg-card p-4 shadow-soft sm:rounded-3xl sm:p-6">
       <div className="grid gap-5 sm:grid-cols-[180px_1fr] sm:items-center">
-        <QrCard url={url} title="QR para invitados" className="p-4 shadow-none" />
+        <QrCard
+          url={url}
+          title="QR para invitados"
+          className="mx-auto max-w-52 p-4 shadow-none sm:max-w-none"
+        />
         <div>
-          <h2 className="font-heading text-2xl font-semibold">Comparte el album</h2>
+          <h2 className="font-heading text-2xl font-semibold leading-tight">
+            Comparte el album
+          </h2>
           <p className="mt-2 text-body-sm text-muted-foreground">
             Tus invitados entran desde el navegador, suben recuerdos y vuelven cuando
             quieras revelar la galeria.
           </p>
-          <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+          <div className="mt-5 grid gap-2 sm:flex sm:flex-row">
             <CopyButton value={url} label="Copiar link" copiedLabel="Copiado" />
             {albumId ? (
               <Button

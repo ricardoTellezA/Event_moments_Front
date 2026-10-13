@@ -12,7 +12,7 @@ export function AdminAlbumSettings({
   onPatch: (patch: Partial<EventAlbum>) => void;
 }) {
   return (
-    <ScrollReveal className="space-y-3 rounded-3xl border border-border bg-card p-6 shadow-soft">
+    <ScrollReveal className="space-y-3 rounded-[1.6rem] border border-border bg-card p-4 shadow-soft sm:rounded-3xl sm:p-6">
       <h2 className="font-heading text-2xl font-semibold">Ajustes</h2>
       <SettingRow
         label="Album abierto para subir"

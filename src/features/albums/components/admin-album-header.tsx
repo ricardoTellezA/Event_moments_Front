@@ -32,17 +32,20 @@ export function AdminAlbumHeader({
         <ArrowLeftIcon />
         Volver al album
       </Button>
-      <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
+      <div className="mt-4 grid gap-4 sm:flex sm:flex-wrap sm:items-end sm:justify-between">
         <div>
           <AlbumStatusLabel status={status} />
-          <h1 className="mt-3 font-heading text-4xl font-semibold">{albumName}</h1>
+          <h1 className="mt-3 font-heading text-[clamp(2rem,10vw,3rem)] font-semibold leading-tight [overflow-wrap:anywhere]">
+            {albumName}
+          </h1>
           <p className="mt-2 text-muted-foreground">
             Panel para moderar recuerdos, compartir el evento y ajustar permisos.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
           <Button
             variant="outline"
+            className="w-full sm:w-auto"
             nativeButton={false}
             render={<Link href={`/a/${albumId}/live`} />}
           >
@@ -51,6 +54,7 @@ export function AdminAlbumHeader({
           </Button>
           <Button
             variant="outline"
+            className="w-full sm:w-auto"
             nativeButton={false}
             render={<Link href={`/a/${albumId}/libro`} />}
           >
@@ -59,6 +63,7 @@ export function AdminAlbumHeader({
           </Button>
           <Button
             variant="outline"
+            className="w-full sm:w-auto"
             nativeButton={false}
             render={<Link href={`/a/${albumId}/qr`} />}
           >
@@ -66,7 +71,7 @@ export function AdminAlbumHeader({
             QR para imprimir
           </Button>
           <Button
-            className="bg-afterglow"
+            className="col-span-2 w-full bg-afterglow sm:col-span-1 sm:w-auto"
             nativeButton={false}
             render={<Link href={`/a/${albumId}`} />}
           >

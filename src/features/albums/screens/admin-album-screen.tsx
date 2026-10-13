@@ -42,7 +42,7 @@ export function AdminAlbumScreen({ id }: { id: string }) {
   }
 
   return (
-    <main className="mx-auto w-full max-w-5xl space-y-10 px-5 py-12">
+    <main className="mx-auto w-full max-w-5xl space-y-7 px-4 py-7 sm:space-y-10 sm:px-5 sm:py-12">
       <AdminAlbumHeader albumId={album.id} albumName={album.name} status={status} />
       <AdminAlbumStats
         photos={album.photos.length}

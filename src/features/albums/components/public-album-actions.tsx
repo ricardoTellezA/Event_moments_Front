@@ -37,7 +37,7 @@ export function PublicAlbumActions({
   onDownload: () => void;
 }) {
   return (
-    <ScrollReveal className="flex flex-wrap items-center gap-3">
+    <ScrollReveal className="grid grid-cols-2 items-center gap-3 sm:flex sm:flex-wrap">
       <UploadMemoryDialog
         albumId={albumId}
         disabled={!canUpload || remainingRoll <= 0}
@@ -52,6 +52,7 @@ export function PublicAlbumActions({
           size="lg"
           disabled={downloading}
           onClick={onDownload}
+          className="w-full sm:w-auto"
         >
           <DownloadIcon />
           {downloading ? "Preparando..." : "Descargar todo"}
@@ -60,7 +61,7 @@ export function PublicAlbumActions({
       {canManage ? (
         <>
           <Button
-            className="bg-afterglow shadow-soft"
+            className="w-full bg-afterglow shadow-soft sm:w-auto"
             size="lg"
             nativeButton={false}
             render={<Link href={`/a/${albumId}/revisar`} />}
@@ -71,6 +72,7 @@ export function PublicAlbumActions({
           <Button
             variant="ghost"
             size="lg"
+            className="w-full sm:w-auto"
             nativeButton={false}
             render={<Link href={`/a/${albumId}/administrar`} />}
           >
@@ -80,12 +82,12 @@ export function PublicAlbumActions({
         </>
       ) : null}
       {uploadMsLabel ? (
-        <span className="rounded-full bg-muted px-3 py-1.5 text-sm text-muted-foreground">
+        <span className="col-span-2 w-fit rounded-full bg-muted px-3 py-1.5 text-sm text-muted-foreground sm:col-span-1">
           {uploadMsLabel} restantes
         </span>
       ) : null}
       {Number.isFinite(remainingRoll) ? (
-        <span className="rounded-full bg-muted px-3 py-1.5 text-sm text-muted-foreground">
+        <span className="col-span-2 w-fit rounded-full bg-muted px-3 py-1.5 text-sm text-muted-foreground sm:col-span-1">
           {remainingRoll === 0 ? "Tu rollo esta completo" : `${remainingRoll} fotos restantes`}
         </span>
       ) : null}

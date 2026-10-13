@@ -30,7 +30,8 @@ export function PublicAlbumTabs({
 
   return (
     <Tabs defaultValue="gallery" className="w-full">
-      <TabsList className="h-auto flex-wrap rounded-full">
+      <div className="-mx-4 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
+        <TabsList className="h-auto min-w-max rounded-full">
         <TabsTrigger value="gallery" className="rounded-full px-4 py-2">
           Galeria
         </TabsTrigger>
@@ -50,13 +51,14 @@ export function PublicAlbumTabs({
             Lo mejor
           </TabsTrigger>
         ) : null}
-      </TabsList>
+        </TabsList>
+      </div>
 
-      <TabsContent value="gallery" className="mt-8 animate-wizard-forward">
+      <TabsContent value="gallery" className="mt-5 animate-wizard-forward sm:mt-8">
         <MemoryGrid photos={album.photos} showStatus={showStatus} />
       </TabsContent>
-      <TabsContent value="timeline" className="mt-8 animate-wizard-forward">
-        <div className="space-y-8 border-l border-border pl-6">
+      <TabsContent value="timeline" className="mt-5 animate-wizard-forward sm:mt-8">
+        <div className="space-y-7 border-l border-border pl-5 sm:space-y-8 sm:pl-6">
           {timeline.map((group) => (
             <div key={`${group.time}-${group.label}`} className="relative">
               <span className="absolute -left-[31px] top-2 size-3 rounded-full bg-afterglow ring-4 ring-background" />
@@ -108,7 +110,7 @@ export function PublicAlbumTabs({
           </div>
         </TabsContent>
       ) : null}
-      <TabsContent value="rolls" className="mt-8 animate-wizard-forward">
+      <TabsContent value="rolls" className="mt-5 animate-wizard-forward sm:mt-8">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {guestGroups.map((group) => (
             <div

@@ -31,7 +31,7 @@ export function MemoryGrid({
 
   if (photos.length === 0) {
     return (
-      <p className="rounded-3xl border border-dashed border-border p-10 text-center text-muted-foreground">
+      <p className="rounded-3xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground sm:p-10 sm:text-base">
         Todavia no hay recuerdos aqui. Se el primero en subir.
       </p>
     );
@@ -117,11 +117,16 @@ export function MemoryGrid({
 
   return (
     <>
-      <div className={cn("columns-2 gap-3 sm:columns-3 lg:columns-4", className)}>
+      <div
+        className={cn(
+          "grid grid-cols-2 gap-3 sm:columns-3 sm:block lg:columns-4",
+          className,
+        )}
+      >
         {photos.map((photo, index) => (
           <figure
             key={photo.id}
-            className="group relative mb-3 break-inside-avoid overflow-hidden rounded-2xl bg-muted shadow-soft"
+            className="group relative break-inside-avoid overflow-hidden rounded-2xl bg-muted shadow-soft sm:mb-3"
           >
             <button
               type="button"
@@ -136,7 +141,7 @@ export function MemoryGrid({
                 height={900}
                 unoptimized
                 loading="lazy"
-                className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+                className="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-[1.025] sm:aspect-auto"
               />
             </button>
             <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent p-3 text-xs font-semibold text-background opacity-0 transition-opacity duration-300 group-hover:opacity-100">

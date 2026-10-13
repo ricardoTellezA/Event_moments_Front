@@ -18,9 +18,11 @@ export function CreateAlbumScreen() {
   const form = useCreateAlbumController();
 
   return (
-    <main className="mx-auto w-full max-w-2xl px-5 py-14">
+    <main className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-5 sm:py-14">
       <ScrollReveal>
-        <h1 className="font-heading text-4xl font-semibold">Crea tu album</h1>
+        <h1 className="font-heading text-[clamp(2.25rem,11vw,3rem)] font-semibold leading-none">
+          Crea tu album
+        </h1>
         <p className="mt-2 text-muted-foreground">
           Tres pasos rapidos. Puedes cambiar todo despues desde el panel.
         </p>
@@ -32,15 +34,15 @@ export function CreateAlbumScreen() {
 
       <ScrollReveal
         as="section"
-        className="wizard-card mt-8 overflow-hidden rounded-3xl border border-border bg-card p-6 shadow-soft"
+        className="wizard-card mt-6 overflow-hidden rounded-[1.6rem] border border-border bg-card p-4 shadow-soft sm:mt-8 sm:rounded-3xl sm:p-6"
         delay={90}
       >
         <div
           key={form.step}
           className={
             form.direction === "forward"
-              ? "min-h-[318px] space-y-6 animate-wizard-forward"
-              : "min-h-[318px] space-y-6 animate-wizard-back"
+              ? "min-h-[318px] space-y-5 animate-wizard-forward sm:space-y-6"
+              : "min-h-[318px] space-y-5 animate-wizard-back sm:space-y-6"
           }
         >
           {form.step === 0 ? (
@@ -87,7 +89,7 @@ export function CreateAlbumScreen() {
           ) : null}
         </div>
 
-        <div className="flex items-center justify-between pt-2">
+        <div className="grid grid-cols-2 items-center gap-3 pt-2 sm:flex sm:justify-between">
           <Button
             variant="ghost"
             disabled={form.step === 0}

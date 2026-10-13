@@ -16,7 +16,7 @@ export function AdminAlbumStats({
   completedChallenges: number;
 }) {
   return (
-    <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
       <StatCard label="Recuerdos" value={photos} icon={ImageIcon} delay={0} />
       <StatCard label="Personas" value={contributors} icon={UsersIcon} delay={60} />
       <StatCard label="Visitas" value={views} icon={EyeIcon} delay={120} />
@@ -44,11 +44,11 @@ function StatCard({
   return (
     <ScrollReveal
       delay={delay}
-      className="rounded-3xl border border-border bg-card p-5 shadow-soft"
+      className="rounded-[1.35rem] border border-border bg-card p-4 shadow-soft sm:rounded-3xl sm:p-5"
     >
       <Icon className="size-5 text-primary" />
-      <p className="mt-4 text-sm text-muted-foreground">{label}</p>
-      <p className="font-heading text-3xl font-semibold">{value}</p>
+      <p className="mt-3 text-xs text-muted-foreground sm:mt-4 sm:text-sm">{label}</p>
+      <p className="font-heading text-2xl font-semibold sm:text-3xl">{value}</p>
     </ScrollReveal>
   );
 }

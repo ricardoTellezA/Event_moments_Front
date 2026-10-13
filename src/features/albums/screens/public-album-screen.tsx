@@ -90,7 +90,7 @@ export function PublicAlbumScreen({ id }: { id: string }) {
   return (
     <main>
       <PublicAlbumHero album={album} status={status} />
-      <div className="mx-auto w-full max-w-6xl space-y-12 px-5 py-10">
+      <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-7 sm:space-y-12 sm:px-5 sm:py-10">
         <PublicAlbumActions
           albumId={album.id}
           canManage={canManage}
