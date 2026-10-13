@@ -1,8 +1,9 @@
 "use client";
 
-import { ImageIcon } from "lucide-react";
+import { CheckIcon, ImageIcon } from "lucide-react";
 
 import { ScrollReveal } from "@/components/shared/scroll-reveal/scroll-reveal";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MemoryGrid } from "@/features/albums/components/memory-grid";
 import type { AlbumMemory } from "@/features/albums/types/album.types";
@@ -23,6 +24,7 @@ export function AdminModerationSection({
   rejectedPhotos,
   allPhotos,
   onApprove,
+  onApproveAllPending,
   onReject,
   onRemove,
 }: {
@@ -31,9 +33,24 @@ export function AdminModerationSection({
   rejectedPhotos: AlbumMemory[];
   allPhotos: AlbumMemory[];
   onApprove: (photoId: string) => void;
+  onApproveAllPending: () => void;
   onReject: (photoId: string) => void;
   onRemove: (photoId: string) => void;
 }) {
+  const handleApproveAllPending = () => {
+    if (pendingPhotos.length === 0) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Vas a aprobar ${pendingPhotos.length} recuerdos pendientes y se veran en el album publico. ¿Continuar?`,
+    );
+
+    if (confirmed) {
+      onApproveAllPending();
+    }
+  };
+
   const moderationTabs: ModerationTab[] = [
     {
       value: "pending",
@@ -83,16 +100,29 @@ export function AdminModerationSection({
               Revisa lo que suben los invitados antes de mostrarlo en publico.
             </p>
           </div>
-          <div className="flex flex-wrap gap-1.5 text-xs font-semibold text-muted-foreground">
-            <span className="rounded-full bg-muted/70 px-2.5 py-1">
-              {pendingPhotos.length} pendientes
-            </span>
-            <span className="rounded-full bg-muted/70 px-2.5 py-1">
-              {approvedPhotos.length} aprobadas
-            </span>
-            <span className="rounded-full bg-muted/70 px-2.5 py-1">
-              {rejectedPhotos.length} rechazadas
-            </span>
+          <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+            {pendingPhotos.length > 0 ? (
+              <Button
+                type="button"
+                size="sm"
+                className="h-9 rounded-full bg-afterglow px-3 shadow-soft"
+                onClick={handleApproveAllPending}
+              >
+                <CheckIcon className="size-4" />
+                Aprobar todas
+              </Button>
+            ) : null}
+            <div className="flex flex-wrap gap-1.5">
+              <span className="rounded-full bg-muted/70 px-2.5 py-1">
+                {pendingPhotos.length} pendientes
+              </span>
+              <span className="rounded-full bg-muted/70 px-2.5 py-1">
+                {approvedPhotos.length} aprobadas
+              </span>
+              <span className="rounded-full bg-muted/70 px-2.5 py-1">
+                {rejectedPhotos.length} rechazadas
+              </span>
+            </div>
           </div>
         </div>
 

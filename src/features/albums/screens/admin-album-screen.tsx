@@ -62,6 +62,7 @@ export function AdminAlbumScreen({ id }: { id: string }) {
         rejectedPhotos={admin.rejectedPhotos}
         allPhotos={album.photos}
         onApprove={(photoId) => void admin.moderatePhoto(photoId, "approved")}
+        onApproveAllPending={() => void admin.bulkModeratePhotos("approved", "pending")}
         onReject={(photoId) => void admin.moderatePhoto(photoId, "rejected")}
         onRemove={(photoId) => void admin.removePhoto(photoId)}
       />

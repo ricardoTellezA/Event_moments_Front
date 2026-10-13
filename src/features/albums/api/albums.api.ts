@@ -311,6 +311,24 @@ export function updateEventPhotoStatus(
   );
 }
 
+export function updateEventPhotosBulkStatus(
+  idOrSlug: string,
+  input: {
+    fromStatus?: "pending" | "approved" | "rejected";
+    status: "pending" | "approved" | "rejected";
+  },
+  token: string | null,
+) {
+  return apiFetch<{ updated: number; status: "pending" | "approved" | "rejected" }>(
+    `/events/${idOrSlug}/photos/bulk-status`,
+    {
+      method: "PATCH",
+      token,
+      body: JSON.stringify(input),
+    },
+  );
+}
+
 export async function downloadEventPhotos(slug: string, token: string | null) {
   const response = await fetch(`${API_BASE_URL}/events/${slug}/photos/download`, {
     headers: {

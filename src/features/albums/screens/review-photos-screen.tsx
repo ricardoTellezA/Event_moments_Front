@@ -61,6 +61,26 @@ export function ReviewPhotosScreen({ id }: { id: string }) {
     setLastAction(null);
   };
 
+  const approveAllPending = () => {
+    if (pendingPhotos.length === 0) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Vas a aprobar ${pendingPhotos.length} recuerdos pendientes y se veran en el album publico. ¿Continuar?`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    void admin.bulkModeratePhotos("approved", "pending");
+    setCurrentIndex(0);
+    setDragOffset(0);
+    setDragStartX(null);
+    setLastAction(null);
+  };
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!currentPhoto) {
@@ -172,6 +192,17 @@ export function ReviewPhotosScreen({ id }: { id: string }) {
             <p className="max-w-sm text-sm leading-6 text-muted-foreground">
               En celular desliza a la derecha para aprobar o a la izquierda para rechazar. En compu usa los botones o las flechas del teclado.
             </p>
+            {pendingPhotos.length > 0 ? (
+              <Button
+                type="button"
+                variant="outline"
+                className="h-11 rounded-full bg-white px-4 shadow-soft"
+                onClick={approveAllPending}
+              >
+                <CheckIcon />
+                Aprobar todas
+              </Button>
+            ) : null}
             <div className="hidden gap-2 text-xs font-semibold text-muted-foreground lg:flex">
               <span className="rounded-full bg-white px-3 py-1.5 shadow-soft">
                 ← Rechazar

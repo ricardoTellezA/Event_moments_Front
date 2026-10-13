@@ -9,6 +9,7 @@ import {
   removeEventPhoto,
   updateEvent,
   updateEventPhotoStatus,
+  updateEventPhotosBulkStatus,
 } from "@/features/albums/api/albums.api";
 import { albumUrl, getAlbumStatus } from "@/features/albums/lib/albums-store";
 import type { EventAlbum } from "@/features/albums/types/album.types";
@@ -141,6 +142,43 @@ export function useAdminAlbumController(id: string) {
     }
   };
 
+  const bulkModeratePhotos = async (
+    nextStatus: "pending" | "approved" | "rejected",
+    fromStatus: "pending" | "approved" | "rejected" = "pending",
+  ) => {
+    if (!album) {
+      return;
+    }
+
+    const previousAlbum = album;
+    setAlbum({
+      ...album,
+      photos: album.photos.map((photo) =>
+        photo.status === fromStatus ? { ...photo, status: nextStatus } : photo,
+      ),
+    });
+
+    try {
+      const token = await getToken();
+      const result = await updateEventPhotosBulkStatus(
+        album.dbId ?? album.id,
+        { status: nextStatus, fromStatus },
+        token,
+      );
+      void refreshAlbum();
+      toast.success(
+        nextStatus === "approved"
+          ? `${result.updated} recuerdos aprobados`
+          : nextStatus === "rejected"
+            ? `${result.updated} recuerdos rechazados`
+            : `${result.updated} recuerdos pendientes`,
+      );
+    } catch {
+      setAlbum(previousAlbum);
+      toast.error("No pudimos moderar los recuerdos");
+    }
+  };
+
   const removePhoto = async (photoId: string) => {
     if (!album) {
       return;
@@ -189,6 +227,7 @@ export function useAdminAlbumController(id: string) {
     shareUrl,
     status,
     clearPhotos,
+    bulkModeratePhotos,
     moderatePhoto,
     patchAlbum,
     removePhoto,
