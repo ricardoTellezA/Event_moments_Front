@@ -14,6 +14,8 @@ export const durationOptions = [
   { label: "30 dias", value: "720" },
 ];
 
+const photosPerGuestOptions = [6, 12, 24, 36, 50, 100];
+
 export function BasicAlbumStep({
   name,
   date,
@@ -202,7 +204,7 @@ export function AlbumModeStep({
       {disposableOn ? (
         <Field label="Fotos por invitado">
           <div className="flex flex-wrap gap-2">
-            {[6, 12, 24, 36].map((option) => (
+            {photosPerGuestOptions.map((option) => (
               <Pill
                 key={option}
                 active={photosPerGuest === option}

@@ -172,8 +172,8 @@ export function UploadMemoryDialog({
             }}
           />
           <span className="block text-xs text-muted-foreground">
-            Maximo {maxFiles} fotos en esta subida. Limite final: 150 fotos por
-            album.
+            Maximo {maxFiles} fotos en esta subida. Puedes volver a subir mas
+            despues.
           </span>
         </label>
 
@@ -253,7 +253,7 @@ export function UploadMemoryDialog({
 
 function getUploadErrorMessage(error: unknown) {
   if (error instanceof Error && error.message === "IMAGE_TOO_LARGE") {
-    return "Una foto sigue pesando mas de 4 MB despues de optimizarla";
+    return "Una foto sigue pesando mas de 8 MB despues de optimizarla";
   }
 
   if (error instanceof ApiError) {
@@ -269,7 +269,7 @@ function getUploadErrorMessage(error: unknown) {
 
 function getUploadErrorCodeMessage(code?: string) {
   const messages: Record<string, string> = {
-    EVENT_PHOTO_LIMIT_REACHED: "Este album ya llego al limite de 150 fotos",
+    EVENT_PHOTO_LIMIT_REACHED: "Este album ya llego al limite de fotos",
     PARTICIPANT_PHOTO_LIMIT_REACHED:
       "Ya alcanzaste el limite de fotos para este album",
     EVENT_UPLOAD_CLOSED: "Este album ya cerro la subida de fotos",

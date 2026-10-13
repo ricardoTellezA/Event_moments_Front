@@ -5,9 +5,9 @@ type CompressImageOptions = {
   qualities?: number[];
 };
 
-const defaultMaxFileSize = 4 * 1024 * 1024;
-const defaultMaxImageSide = 2400;
-const defaultQualities = [0.9, 0.82, 0.74];
+const defaultMaxFileSize = 8 * 1024 * 1024;
+const defaultMaxImageSide = 3200;
+const defaultQualities = [0.92, 0.86, 0.78, 0.7, 0.62];
 
 export async function compressImageFile(
   file: File,

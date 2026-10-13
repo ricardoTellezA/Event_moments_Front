@@ -4,6 +4,8 @@ import { ScrollReveal } from "@/components/shared/scroll-reveal/scroll-reveal";
 import { Switch } from "@/components/ui/switch";
 import type { EventAlbum } from "@/features/albums/types/album.types";
 
+const photosPerGuestOptions = [6, 12, 24, 36, 50, 100];
+
 export function AdminAlbumSettings({
   album,
   onPatch,
@@ -43,7 +45,7 @@ export function AdminAlbumSettings({
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 py-3">
           <span className="text-sm font-medium">Fotos por invitado</span>
           <div className="flex flex-wrap gap-2">
-            {[6, 12, 24, 36].map((option) => (
+            {photosPerGuestOptions.map((option) => (
               <button
                 key={option}
                 type="button"

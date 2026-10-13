@@ -87,7 +87,6 @@ export function useCreateAlbumController() {
           bestOfOn,
           disposableOn,
           photosPerGuest,
-          maxPhotos: 150,
         },
         token,
       );

@@ -7,6 +7,8 @@ import { ScrollReveal } from "@/components/shared/scroll-reveal/scroll-reveal";
 import { Button } from "@/components/ui/button";
 import { UploadMemoryDialog } from "@/features/albums/components/upload-memory-dialog";
 
+const maxFilesPerUpload = 50;
+
 export function PublicAlbumActions({
   albumId,
   canManage,
@@ -41,7 +43,11 @@ export function PublicAlbumActions({
       <UploadMemoryDialog
         albumId={albumId}
         disabled={!canUpload || remainingRoll <= 0}
-        maxFiles={Number.isFinite(remainingRoll) ? Math.min(12, remainingRoll) : 12}
+        maxFiles={
+          Number.isFinite(remainingRoll)
+            ? Math.min(maxFilesPerUpload, remainingRoll)
+            : maxFilesPerUpload
+        }
         open={uploadDialogOpen}
         onOpenChange={onUploadDialogOpenChange}
         onUpload={onUpload}
